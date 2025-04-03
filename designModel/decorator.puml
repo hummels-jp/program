@@ -1,0 +1,33 @@
+@startuml
+title Decorator Design Pattern
+
+interface Component {
+    + operation(): void
+}
+
+class ConcreteComponent implements Component {
+    + operation(): void
+}
+
+abstract class Decorator implements Component {
+    - component: Component
+    + Decorator(component: Component)
+    + operation(): void
+}
+
+class ConcreteDecoratorA extends Decorator {
+    + operation(): void
+    + addedBehavior(): void
+}
+
+class ConcreteDecoratorB extends Decorator {
+    + operation(): void
+    + addedBehavior(): void
+}
+
+Component <|.. ConcreteComponent
+Component <|.. Decorator
+Decorator <|-- ConcreteDecoratorA
+Decorator <|-- ConcreteDecoratorB
+
+@enduml

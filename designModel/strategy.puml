@@ -1,0 +1,26 @@
+@startuml
+
+class Context {
+    - Strategy* strategy
+    + Context(Strategy* strategy)
+    + void setStrategy(Strategy* strategy)
+    + void executeStrategy()
+}
+
+interface Strategy {
+    + execute() : void
+}
+
+class ConcreteStrategyA {
+    + execute() : void
+}
+
+class ConcreteStrategyB {
+    + execute() : void
+}
+
+Context --> Strategy : uses
+Strategy <|.. ConcreteStrategyA
+Strategy <|.. ConcreteStrategyB
+
+@enduml

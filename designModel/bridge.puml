@@ -1,0 +1,36 @@
+@startuml
+class Color {
+    +getColor() : std::string
+}
+
+class Red {
+    +getColor() : std::string
+}
+
+class Blue {
+    +getColor() : std::string
+}
+
+class Shape {
+    #color : std::shared_ptr<Color>
+    +Shape(std::shared_ptr<Color>)
+    +draw() : void
+}
+
+class Circle {
+    +Circle(std::shared_ptr<Color>)
+    +draw() : void
+}
+
+class Rectangle {
+    +Rectangle(std::shared_ptr<Color>)
+    +draw() : void
+}
+
+Color <|.. Red
+Color <|.. Blue
+Shape <|-- Circle
+Shape <|-- Rectangle
+Shape o-- Color
+
+@enduml
