@@ -1,5 +1,7 @@
 #include <iostream>
 #include <vector>
+#include <utility>
+using namespace std;
 
 // Insertion Sort in C++
 // This program sorts an array using the insertion sort algorithm.  
@@ -37,12 +39,39 @@ void printArray(const std::vector<int>& arr) {
     std::cout << std::endl;
 }
 
+void insert_sort_hqq(vector<int>& arr)
+{
+    int n = arr.size();
+
+    // 外循环，访问后面的无序列表
+    for (int i = 1; i < n; i++)
+    {
+        /* code */
+        int temp = arr[i];
+        // 内循环，从后面访问前面的有序列表
+        int j = i-1;
+
+        // 当有序数组从最后一个元素开始，与 temp值进行比较，如果大于temp值，就需要后移
+        while (j>=0&&arr[j]>temp)
+        {
+            /* code */
+            arr[j+1] = arr[j];
+            j--;
+        }
+
+        // 找到空位，将temp填充进去
+        arr[j+1] = temp;
+    }
+    
+}
+
 int main() {
     std::vector<int> arr = {12, 11, 13, 5, 6};
     std::cout << "Original array: ";
     printArray(arr);
 
-    insertionSort(arr);
+    // insertionSort(arr);
+    insert_sort_hqq(arr);
 
     std::cout << "Sorted array: ";
     printArray(arr);

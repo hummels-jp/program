@@ -1,5 +1,6 @@
 #include <iostream>
 #include <vector>
+using namespace std;
 // 希尔排序的实现
 // Shell Sort Implementation in C++
 // 希尔排序的实现
@@ -37,12 +38,40 @@ void printArray(const std::vector<int>& arr) {
     std::cout << std::endl;
 }
 
+// shell 排序， 从大到小
+void shell_sort_hqq(vector<int>& arr)
+{
+    int n = arr.size();
+    // 分成相应的个数的gap， 在每个 gap内部进行插入排序
+    for (int gap = n/2; gap >0; gap/=2)
+    {
+        // 从后面的非有序序列中取值
+        for(int i = gap; i< n; i++)
+        {
+            int temp = arr[i];
+            // 从前面的有序序列中取出最后一个值
+            int j = i - gap;
+            // 前面有序队列的值如果大于temp，则往后移动
+            while (j>=0&&arr[j]<temp)
+            {
+                /* code */
+                arr[j+gap] = arr[j];
+                j-=gap;
+            }
+            
+            arr[j+gap] = temp;
+        }
+    }
+    
+}
+
 int main() {
     std::vector<int> arr = {12, 34, 54, 2, 3};
     std::cout << "Original array: ";
     printArray(arr);
 
-    shellSort(arr);
+    // shellSort(arr);
+    shell_sort_hqq(arr);
 
     std::cout << "Sorted array: ";
     printArray(arr);
