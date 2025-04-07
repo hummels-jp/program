@@ -62,16 +62,16 @@ void bubble_sort_hqq(vector<int>& arr)
     
 }
 
-int main() {
-    std::vector<int> arr = {64, 34, 25, 12, 22, 11, 90};
-    std::cout << "Original array: ";
-    printArray(arr);
+// int main() {
+//     std::vector<int> arr = {64, 34, 25, 12, 22, 11, 90};
+//     std::cout << "Original array: ";
+//     printArray(arr);
 
-    // bubbleSort(arr);
-    bubble_sort_hqq(arr);
+//     // bubbleSort(arr);
+//     bubble_sort_hqq(arr);
 
-    std::cout << "Sorted array: ";
-    printArray(arr);
+//     std::cout << "Sorted array: ";
+//     printArray(arr);
 
-    return 0;
-}
+//     return 0;
+// }
