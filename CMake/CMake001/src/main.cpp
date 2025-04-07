@@ -7,7 +7,7 @@ int main() {
     std::cout << "Addition: " << add(a, b) << std::endl;
     std::cout << "Subtraction: " << subtract(a, b) << std::endl;
     std::cout << "Multiplication: " << multiply(a, b) << std::endl;
-    // std::cout << "Division: " << safe_divide(a, b) << std::endl;
+    std::cout << "Division: " << divide(a, b) << std::endl;
 
     return 0;
 }
