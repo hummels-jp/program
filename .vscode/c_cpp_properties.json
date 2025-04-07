@@ -1,0 +1,11 @@
+{
+    "name": "MinGW-w64",
+    "compilers": {
+      "C": "C:/mingw64/bin/gcc.exe",
+      "CXX": "C:/mingw64/bin/g++.exe"
+    },
+    "preferredGenerator": {
+      "name": "MinGW Makefiles"
+    }
+  }
+  
