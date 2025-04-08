@@ -356,6 +356,8 @@ char cwd [PATH_MAX];
 // Prints search results.
 // Parameters: argc (int) number of user arguments.
 //             argv (char *[]) user given arguments.
+
+// .\Perg.exe -f  ..\sample_data\sample1.txt 'hello'
 int main(int argc, char *argv[]) {
 	Settings *instance = new Settings;
 	std::queue<std::string> *filePaths = new std::queue<std::string>;
