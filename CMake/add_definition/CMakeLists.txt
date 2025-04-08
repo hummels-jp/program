@@ -2,7 +2,7 @@
 cmake_minimum_required(VERSION 3.10)
 
 # Project name
-project(CMake001)
+project(definition_demo)
 
 # Set C++ standard
 set(CMAKE_CXX_STANDARD 11)
@@ -13,26 +13,32 @@ set(CMAKE_CXX_STANDARD_REQUIRED True)
 # GLOB_RECURSE: 递归查找当前目录及子目录下的所有源文件
 
 file(GLOB_RECURSE SOURCES "${PROJECT_SOURCE_DIR}/src/*.cpp")
+
 # file(GLOB_RECURSE SOURCES "${PROJECT_SOURCE_DIR}/src/*.c")
 
 # Add header files (if needed)
 # 添加头文件路径
 include_directories(${PROJECT_SOURCE_DIR}/include)
 
+
 # Add library
-set(LIBRARY_OUTPUT_PATH ${PROJECT_SOURCE_DIR}/lib)
+# set(LIBRARY_OUTPUT_PATH ${PROJECT_SOURCE_DIR}/lib)
 
 # Add shared library
-# add_library(calculator SHARED ${SOURCES})
+add_library(calculator SHARED ${SOURCES})
 
 # Add static library
-add_library(calculator STATIC ${SOURCES})
+# add_library(calculator STATIC ${SOURCES})
 
-#set(EXECUTABLE_OUTPUT_PATH ${PROJECT_SOURCE_DIR}/bin)
+set(EXECUTABLE_OUTPUT_PATH ${PROJECT_SOURCE_DIR}/bin)
 
 # Add executable
-#add_executable(CMakeTest001 ${SOURCES})
+add_executable(definition_demo ${SOURCES})
 
+# 添加宏定义
+add_definitions(-DDEBUG)
+
+target_link_libraries(definition_demo calculator)
 
 
 # Include directories (if needed)

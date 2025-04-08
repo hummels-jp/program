@@ -1,0 +1,22 @@
+hello
+Hello,World
+hello, world
+    -A    After Context         perg will grab a number of lines after the line containing the
+                                <search term>. This does not work with search inversion.
+                                
+    -f    Single File Search    Signals perg to only search the <file> for the <search term>. If -f is not
+                                used, perg will search the entire directory from where perg is called from.
+
+    -h    Include Hidden        Will include hidden files in the search. Default search behavior is to
+                                ignore hidden files.
+
+    -r    Recursive Search      Recursively searches through the directory and all sub directories for the 
+                                given <search term>. Will not do anything if the [-f <file>] flag is given.
+
+    -v    Search Inversion      Search for every line that does not include the <search term>.
+
+    -V    Enable Verbose        The file path to the file will be printed along with the search result.
+    
+    -w    File Parallelism      Signals perg to perform single-threaded searches of multiple files. Default
+                                search behavior is to search files one at a time with mulitple threads.
+                                This is optimal when the files are small, similar size, or there are many.
