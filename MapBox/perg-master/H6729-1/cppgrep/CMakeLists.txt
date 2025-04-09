@@ -13,6 +13,8 @@ else()
 endif()
 
 set(SOURCES ${CMAKE_CURRENT_SOURCE_DIR}/src/main.cpp)
+#aux_source_directory(${CMAKE_CURRENT_SOURCE_DIR}/src SOURCES)
+set(EXECUTABLE_OUTPUT_PATH ${CMAKE_CURRENT_SOURCE_DIR}/bin)
 
 add_executable(cppgrep ${SOURCES})
 

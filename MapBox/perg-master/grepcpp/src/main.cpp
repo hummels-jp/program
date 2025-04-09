@@ -173,7 +173,8 @@ void show_usage(const char* program_name) {
     std::cout << "  -h        Show this help information" << std::endl;
 }
 
-int main(int argc, char* argv[]) {
+int main(int argc, char* argv[]) 
+{
     // 使用选项结构体
     SearchOptions options;
     

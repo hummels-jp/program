@@ -15,22 +15,25 @@
 
 namespace fs = std::filesystem;
 
+
 // 程序选项结构体
 struct SearchOptions {
-    std::string query;
-    fs::path directory;
-    bool ignore_case = false;
-    bool use_regex = false;
+    std::string query; // 搜索查询字符串
+    fs::path directory; // 搜索目录路径
+    bool ignore_case = false; // 是否忽略大小写
+    bool use_regex = false; // 是否使用正则表达式
 };
 
 // 线程安全队列的实现，用于多线程间的任务分发
 template <typename T>
-class ThreadSafeQueue {
+class ThreadSafeQueue 
+{
 public:
+    // 将值推入队列
     void push(T value) {
-        std::lock_guard<std::mutex> lock(mutex_);
-        queue_.push(std::move(value));
-        cond_var_.notify_one();
+        std::lock_guard<std::mutex> lock(mutex_); // 锁定互斥量
+        queue_.push(std::move(value)); // 将值移动到队列中
+        cond_var_.notify_one(); // 通知一个等待线程
     }
 
     // 尝试从队列中获取一个值，如果队列为空且已完成则返回false
@@ -64,10 +67,10 @@ public:
     }
 
 private:
-    std::queue<T> queue_;
-    mutable std::mutex mutex_;
-    std::condition_variable cond_var_;
-    std::atomic<bool> finished_{false};
+    std::queue<T> queue_; // 线程安全队列
+    mutable std::mutex mutex_; // 互斥锁
+    std::condition_variable cond_var_; // 条件变量
+    std::atomic<bool> finished_{false}; // 是否已完成标志
 };
 
 // 全局变量声明
@@ -77,7 +80,8 @@ std::atomic<int> files_processed_count{0};   // 已处理文件计数
 std::atomic<int> matches_found_count{0};     // 匹配数计数
 
 // 转换字符串为小写
-std::string to_lower(const std::string& str) {
+std::string to_lower(const std::string& str) 
+{
     std::string result = str;
     std::transform(result.begin(), result.end(), result.begin(),
         [](unsigned char c) { return std::tolower(c); });
@@ -85,7 +89,8 @@ std::string to_lower(const std::string& str) {
 }
 
 // 文件搜索工作线程函数
-void search_file_worker(const SearchOptions& options) {
+void search_file_worker(const SearchOptions& options) 
+{
     fs::path file_path;
     
     // 预编译正则表达式（如果启用）
@@ -109,7 +114,8 @@ void search_file_worker(const SearchOptions& options) {
         query_lower = to_lower(options.query);
     }
     
-    while (file_queue.try_pop(file_path)) {
+    while (file_queue.try_pop(file_path)) 
+    {
         std::ifstream file_stream(file_path, std::ios::binary);
 
         if (!file_stream.is_open()) {
