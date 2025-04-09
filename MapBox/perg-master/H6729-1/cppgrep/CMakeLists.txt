@@ -12,9 +12,7 @@ else()
     add_compile_options(-Wall -Wextra -Wpedantic)
 endif()
 
-set(SOURCES
-    main.cpp
-)
+set(SOURCES ${CMAKE_CURRENT_SOURCE_DIR}/src/main.cpp)
 
 add_executable(cppgrep ${SOURCES})
 
