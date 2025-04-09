@@ -1,0 +1,3 @@
+Special chars: @#$%^
+新年快乐
+Line with 	 tab

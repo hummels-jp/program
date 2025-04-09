@@ -1,0 +1,59 @@
+windows下:
+我这边的环境:
+cmake --version
+cmake version 3.31.5
+
+g++ --version
+g++.exe (MinGW-W64 x86_64-ucrt-posix-seh, built by Brecht Sanders, r3) 14.2.0 
+
+操作步骤:
+#如果有删掉build文件夹
+Remove-Item -Recurse -Force build
+
+mkdir build
+cd build
+cmake .. -G "MinGW Makefiles"
+mingw32-make
+########到这里就编译完成了###########
+########运行###########
+./cppgrep WORLD ../test_dir
+-------------------------------------
+linux下:
+操作步骤:
+#如果有删掉build文件夹
+rm -rf build
+
+mkdir build
+cd build
+cmake ..
+make
+###########编译完成###########
+###########运行###########
+./cppgrep WORLD ../test_dir
+
+-----------------------------------
+
+
+
+
+################################
+主要的功能:
+命令行参数处理: 接受一个查询字符串 (query) 和一个目录路径作为输入
+递归目录遍历
+并行文件处理
+忽略大小写：通过 -i
+正则表达式:通过 -r 选项启用
+帮助信息：通过 -h选项显示
+线程安全队列
+
+程序的大致思路:
+创建多个工作线程并行搜索文件内容,使用线程安全的任务队列去分发文件搜索任务
+主线程负责遍历目录，工作线程负责搜索文件内容
+
+循环从队列获取文件路径，直到队列为空且已标记完成
+打开并按行读取文件内容
+二进制文件检测：检查行中是否有非打印字符，如果有则跳过该文件
+使用line.find(query)查找文本匹配
+
+--------
+

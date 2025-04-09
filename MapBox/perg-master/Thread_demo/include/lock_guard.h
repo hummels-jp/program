@@ -1,0 +1,1 @@
+int lock_guard_demo();
