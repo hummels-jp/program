@@ -12,6 +12,8 @@
 #include <chrono>
 #include <regex> 
 #include <algorithm> 
+using namespace std;
+
 
 namespace fs = std::filesystem;
 

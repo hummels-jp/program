@@ -19,5 +19,5 @@ add_executable(${PROJECT_NAME} ${SOURCES})
 # Include directories
 include_directories(${CMAKE_SOURCE_DIR}/include)
 
-# Link libraries (if needed)
-# target_link_libraries(${PROJECT_NAME} <library_name>)
+# Link libraries
+target_link_libraries(${PROJECT_NAME} pthread)
