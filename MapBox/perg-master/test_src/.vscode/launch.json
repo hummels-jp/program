@@ -6,7 +6,7 @@
         "type": "cppdbg",
         "request": "launch",
         "program": "${workspaceFolder}/bin/openmp_example.exe",
-        "args": [],
+        "args": [10],
         "stopAtEntry": false,
         "cwd": "${workspaceFolder}",
         "environment": [],
