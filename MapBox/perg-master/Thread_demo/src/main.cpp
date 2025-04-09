@@ -5,6 +5,7 @@
 #include "conditional_variable.h"
 #include <iostream>
 #include "semaphore.h" // Custom header for semaphore operations
+#include "async.h" // Custom header for async operations
 
 int main()
 {
@@ -13,6 +14,7 @@ int main()
     // shared_mutext_demo();
     // atomic_demo();
     // conditional_variable_demo();
-    semaphore_demo(); // Call the semaphore demo function
+    // semaphore_demo(); // Call the semaphore demo function
+    async_demo(); // Call the async demo function
     return 0;
 }
