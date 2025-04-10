@@ -8,11 +8,12 @@
             "name": "Debug cppgrep (GDB)", // Your name for this config
             "type": "cppdbg",              // Debugger type: gdb/lldb
             "request": "launch",           // Action: launch the program
-            "program": "${workspaceFolder}/build/cppgrep", // Path to executable (NO .exe for Linux)
+            "program": "${workspaceFolder}/bin/cppgrep", // Path to executable (NO .exe for Linux)
                                          // Use cppgrep.exe for Windows MinGW
             "args": [                      // Command line arguments as an array of strings
-                "WORLD",                   // Arg 1: Query
-                "../test_dir"              // Arg 2: Directory (relative to cwd)
+                "-i",
+                "hello",                   // Arg 1: Query
+                "../test_dir/file1.txt"              // Arg 2: Directory (relative to cwd)
                 // Add other args like "-i", "world", "../test_dir" for different tests
             ],
             "stopAtEntry": false,          // false = run until breakpoint, true = stop at main()

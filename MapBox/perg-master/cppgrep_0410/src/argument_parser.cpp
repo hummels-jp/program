@@ -7,15 +7,18 @@ std::optional<SearchOptions> ArgumentParser::parse(int argc, char* argv[]) {
     SearchOptions options;
     int arg_index = 1;
 
-    while (arg_index < argc && argv[arg_index][0] == '-') {
+    // check the options
+    while (arg_index < argc && argv[arg_index][0] == '-') 
+    {
         std::string option = argv[arg_index];
+        // -i hello ../test_dir/file1.txt
         if (option == "-i") {
             options.ignore_case = true;
         } else if (option == "-r") {
             options.use_regex = true;
         } else if (option == "-h") {
             showUsage(argv[0]);
-            return std::nullopt; 
+            return std::nullopt;  // return nullopt to indicate help requested
         } else {
             std::cerr << "Unknown option: " << option << std::endl;
             showUsage(argv[0]);
@@ -27,13 +30,13 @@ std::optional<SearchOptions> ArgumentParser::parse(int argc, char* argv[]) {
     if (argc - arg_index != 2) {
         std::cerr << "Error: Insufficient or too many arguments" << std::endl;
         showUsage(argv[0]);
-        return std::nullopt;
+        return std::nullopt; // return nullopt to indicate error
     }
 
     options.query = argv[arg_index++];
     options.directory = argv[arg_index];
 
-    options.num_threads = std::thread::hardware_concurrency();
+    options.num_threads = std::thread::hardware_concurrency(); // Get the number of hardware threads
     if (options.num_threads == 0) {
         options.num_threads = 2;
         std::cerr << "Warning: Cannot detect hardware concurrency. Using "
@@ -43,6 +46,10 @@ std::optional<SearchOptions> ArgumentParser::parse(int argc, char* argv[]) {
     return options;
 }
 
+// Show usage information
+// This function is called when the user requests help or when there are errors in the arguments
+// It prints the usage information to the standard output
+// The usage information includes the program name, options, and a brief description of each option
 void ArgumentParser::showUsage(const char* program_name) {
     std::cout << "Usage: " << program_name << " [options] <query> <directory path>" << std::endl;
     std::cout << "Options:" << std::endl;
