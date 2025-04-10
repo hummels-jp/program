@@ -6,6 +6,7 @@
 #include <iostream>
 #include "semaphore.h" // Custom header for semaphore operations
 #include "async.h" // Custom header for async operations
+#include "promise.h" // Custom header for promise operations
 
 int main()
 {
@@ -15,6 +16,7 @@ int main()
     // atomic_demo();
     // conditional_variable_demo();
     // semaphore_demo(); // Call the semaphore demo function
-    async_demo(); // Call the async demo function
+    // async_demo(); // Call the async demo function
+    promise_demo(); // Call the promise demo function
     return 0;
 }
