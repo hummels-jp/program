@@ -5,7 +5,8 @@ using namespace std;
 
 #include "lock_guard.h"
 
-std::mutex mtx; // 全局互斥锁
+// static 限定作用域
+static std::mutex mtx; // 全局互斥锁
 int shared_resource = 0;
 
 void incrementResource(int id) {

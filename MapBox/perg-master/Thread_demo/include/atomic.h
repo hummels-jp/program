@@ -1,0 +1,1 @@
+int atomic_demo();
