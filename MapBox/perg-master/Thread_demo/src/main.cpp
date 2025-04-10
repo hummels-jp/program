@@ -7,6 +7,7 @@
 #include "semaphore.h" // Custom header for semaphore operations
 #include "async.h" // Custom header for async operations
 #include "promise.h" // Custom header for promise operations
+#include "packaged_task.h" // Custom header for packaged_task operations
 
 int main()
 {
@@ -17,6 +18,7 @@ int main()
     // conditional_variable_demo();
     // semaphore_demo(); // Call the semaphore demo function
     // async_demo(); // Call the async demo function
-    promise_demo(); // Call the promise demo function
+    // promise_demo(); // Call the promise demo function
+    packaged_task_demo(); // Call the packaged_task demo function
     return 0;
 }
