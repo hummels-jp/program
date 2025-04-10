@@ -1,0 +1,10 @@
+@startuml
+class Grepper {
+    +int run(int argc, char* argv[])
+    --
+    -std::atomic<int> files_found_count_
+    -std::atomic<int> files_processed_count_
+    -std::atomic<int> matches_found_count_
+    -std::mutex output_mutex_
+}
+@enduml

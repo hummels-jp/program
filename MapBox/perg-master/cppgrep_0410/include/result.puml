@@ -1,0 +1,9 @@
+@startuml
+
+class Result {
+    +std::filesystem::path file_path
+    +int line_number
+    +std::string line_content
+}
+
+@enduml

@@ -8,7 +8,6 @@
 #include <atomic>
 #include <mutex>
 #include <regex>
-
 namespace fs = std::filesystem;
 
 class FileSearcher {

@@ -1,0 +1,13 @@
+@startuml
+title Class Diagram for ArgumentParser
+
+class ArgumentParser {
+    + std::optional<SearchOptions> parse(int argc, char* argv[])
+    - void showUsage(const char* program_name)
+}
+
+class SearchOptions
+
+ArgumentParser --> SearchOptions : uses
+
+@enduml

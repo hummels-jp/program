@@ -1,0 +1,13 @@
+@startuml
+' Define the namespace
+package "cppgrep_0410::include" {
+    ' Define the SearchOptions struct
+    class SearchOptions {
+        - std::string query
+        - std::filesystem::path directory
+        - bool ignore_case = false
+        - bool use_regex = false
+        - unsigned int num_threads = 2
+    }
+}
+@enduml

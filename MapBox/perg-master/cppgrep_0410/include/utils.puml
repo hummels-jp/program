@@ -1,0 +1,8 @@
+@startuml
+namespace Utils {
+    class Utils {
+        + to_lower(str: std::string): std::string
+        + is_likely_binary(str: std::string): bool
+    }
+}
+@enduml

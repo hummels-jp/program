@@ -1,0 +1,16 @@
+@startuml
+title ThreadSafeQueue Class Diagram
+
+class ThreadSafeQueue<T> {
+    - mutable std::mutex mutex_
+    - std::condition_variable cond_
+    - std::queue<T> queue_
+    - bool is_finished_ = false
+    --
+    + void push(T value)
+    + bool try_pop(T& value)
+    + void finish()
+    + bool is_finished() const
+}
+
+@enduml

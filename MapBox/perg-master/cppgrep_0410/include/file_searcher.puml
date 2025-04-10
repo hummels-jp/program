@@ -1,0 +1,32 @@
+@startuml
+namespace cppgrep_0410.include {
+    class FileSearcher {
+        - const SearchOptions& options_
+        - ThreadSafeQueue<fs::path>& file_queue_
+        - ThreadSafeQueue<Result>& result_queue_
+        - std::atomic<int>& files_processed_count_
+        - std::atomic<int>& matches_found_count_
+        - std::mutex& output_mutex_
+        - std::regex pattern_
+        - std::string query_lower_
+        - bool regex_valid_ = true
+
+        + FileSearcher(const SearchOptions&, ThreadSafeQueue<fs::path>&, ThreadSafeQueue<Result>&, std::atomic<int>&, std::atomic<int>&, std::mutex&)
+        + void operator()()
+        - void searchFile(const fs::path&)
+        - bool prepareSearch()
+    }
+
+    class SearchOptions
+    class ThreadSafeQueue<T>
+    class Result
+
+    FileSearcher --> SearchOptions : uses
+    FileSearcher --> ThreadSafeQueue<fs::path> : uses
+    FileSearcher --> ThreadSafeQueue<Result> : uses
+    FileSearcher --> Result : uses
+    FileSearcher --> std::atomic<int> : uses
+    FileSearcher --> std::mutex : uses
+    FileSearcher --> std::regex : uses
+}
+@enduml

@@ -1,0 +1,44 @@
+@startuml
+namespace cppgrep_0410.include {
+    class DirectoryWalker {
+        - fs::path start_path_
+        - ThreadSafeQueue<fs::path>& file_queue_
+        - std::atomic<int>& files_found_count_
+        - std::mutex& output_mutex_
+        - bool is_valid_path_
+
+        + DirectoryWalker(
+            const fs::path& startPath,
+            ThreadSafeQueue<fs::path>& outputQueue,
+            std::atomic<int>& foundCounter,
+            std::mutex& consoleMutex
+        )
+        + bool isValid() const
+        + void run()
+    }
+
+    class ThreadSafeQueue<T> {
+        ...
+    }
+}
+
+namespace std {
+    class atomic<T> {
+        ...
+    }
+    class mutex {
+        ...
+    }
+}
+
+namespace std::filesystem {
+    class path {
+        ...
+    }
+}
+
+cppgrep_0410.include.DirectoryWalker --> cppgrep_0410.include.ThreadSafeQueue
+cppgrep_0410.include.DirectoryWalker --> std::atomic
+cppgrep_0410.include.DirectoryWalker --> std::mutex
+cppgrep_0410.include.DirectoryWalker --> std::filesystem.path
+@enduml
