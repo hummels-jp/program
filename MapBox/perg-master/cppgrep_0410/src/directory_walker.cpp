@@ -12,6 +12,7 @@ DirectoryWalker::DirectoryWalker(
       files_found_count_(foundCounter),
       output_mutex_(consoleMutex)
 {
+    // Check if the path exists and is a regular file or directory
     if (!fs::exists(start_path_)) {
         std::lock_guard<std::mutex> lock(output_mutex_);
         std::cerr << "Error: Path does not exist: " << start_path_.string() << std::endl;
@@ -21,8 +22,8 @@ DirectoryWalker::DirectoryWalker(
     }
 }
 
-// 返回true如果路径有效，否则返回false
-// 如果路径是一个常规文件或目录，则返回true
+// Returns true if the path is valid, otherwise false
+// Returns true if the path is a regular file or directory
 bool DirectoryWalker::isValid() const {
     return is_valid_path_;
 }
@@ -46,7 +47,6 @@ void DirectoryWalker::run() {
                     std::lock_guard<std::mutex> lock(output_mutex_);
                     std::cerr << "Error accessing entry " << entry.path() << ": " << e.what() << std::endl;
                 }
-               
             }
         } else {
              std::lock_guard<std::mutex> lock(output_mutex_);
