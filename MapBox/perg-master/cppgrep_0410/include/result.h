@@ -4,11 +4,11 @@
 #include <filesystem>
 #include <string>
 
-// 搜索结果结构体
+// Search result structure
 struct Result {
-    std::filesystem::path file_path;     // 文件路径
-    int line_number;                     // 行号
-    std::string line_content;            // 匹配行的内容
+    std::filesystem::path file_path;     // File path
+    int line_number;                     // Line number
+    std::string line_content;            // Content of the matching line
 };
 
 #endif // RESULT_H

@@ -8,7 +8,7 @@
 
 class ArgumentParser {
 public:
-    // 解析参数。成功时返回options，出错或请求帮助时返回nullopt
+    // Parse arguments. Returns options on success, or nullopt on error or help request
     std::optional<SearchOptions> parse(int argc, char* argv[]);
 
 private:
