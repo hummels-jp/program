@@ -53,9 +53,5 @@ int main()
     {
         /* code */
         p.join();
-    }
-
-    
-    
-    
+    }  
 }
