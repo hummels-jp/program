@@ -1,8 +1,9 @@
 #include "directory_walker.h"
 #include <iostream> // For cerr
 
+
 DirectoryWalker::DirectoryWalker(
-    const fs::path& startPath,
+    const fs::path& startPath, 
     ThreadSafeQueue<fs::path>& outputQueue,
     std::atomic<int>& foundCounter,
     std::mutex& consoleMutex)
@@ -20,6 +21,8 @@ DirectoryWalker::DirectoryWalker(
     }
 }
 
+// 返回true如果路径有效，否则返回false
+// 如果路径是一个常规文件或目录，则返回true
 bool DirectoryWalker::isValid() const {
     return is_valid_path_;
 }

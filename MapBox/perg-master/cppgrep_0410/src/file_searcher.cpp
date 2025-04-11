@@ -19,8 +19,16 @@ FileSearcher::FileSearcher(
       matches_found_count_(matchCounter),
       output_mutex_(consoleMutex) {}
 
+// 准备搜索
+// 通过编译正则表达式和将查询转换为小写来准备搜索
+// 如果正则表达式无效，则返回false
+// 如果正则表达式有效，则返回true
 bool FileSearcher::prepareSearch() {
-    if (options_.use_regex) {
+    // 该函数在每个线程中调用一次
+    // 仅在使用正则表达式时编译正则表达式
+    // 如果使用正则表达式，则编译正则表达式
+    if (options_.use_regex) 
+    {
         try {
             std::regex_constants::syntax_option_type flags = std::regex_constants::ECMAScript;
             if (options_.ignore_case) {
@@ -38,12 +46,20 @@ bool FileSearcher::prepareSearch() {
             regex_valid_ = false;
             return false;
         }
-    } else if (options_.ignore_case) {
+    } 
+    else if (options_.ignore_case) {
         query_lower_ = Utils::to_lower(options_.query);
     }
     return true;
 }
 
+// 线程函数
+// 该函数在每个线程中调用一次
+// 该函数从输入队列中弹出文件路径并搜索文件
+// 如果文件路径为空，则检查完成状态
+// 如果完成状态为true，则退出循环
+// 如果完成状态为false，则继续弹出文件路径
+// 如果文件路径不为空，则搜索文件
 void FileSearcher::operator()() {
     if (!prepareSearch() && options_.use_regex) {
         return; // 如果正则表达式无效则退出
@@ -63,7 +79,18 @@ void FileSearcher::operator()() {
     }
 }
 
-void FileSearcher::searchFile(const fs::path& file_path) {
+// 搜索文件
+// 读取文件的每一行并检查是否匹配
+// 如果找到匹配项，则将结果推送到结果队列
+// 如果文件无法打开，则跳过该文件
+// 如果文件是二进制文件，则跳过该文件
+// 如果读取文件时发生错误，则记录错误
+// 使用共享互斥锁进行控制台输出
+// 读取文件的每一行并检查是否匹配
+// 如果找到匹配项，则将结果推送到结果队列
+void FileSearcher::searchFile(const fs::path& file_path) 
+{
+    // read the file in binary mode
     std::ifstream file_stream(file_path, std::ios::binary);
     if (!file_stream.is_open()) {
         return; // Skip files we can't open
