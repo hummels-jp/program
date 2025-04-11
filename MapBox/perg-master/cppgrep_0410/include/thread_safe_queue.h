@@ -5,46 +5,46 @@
 #include <mutex>
 #include <condition_variable>
 
-// 线程安全队列模板类
+// Thread-safe queue template class
 template<typename T>
 class ThreadSafeQueue {
 public:
-    // 将元素推入队列
+    // Push an element into the queue
     void push(T value) {
         std::lock_guard<std::mutex> lock(mutex_);
         queue_.push(std::move(value));
         cond_.notify_one();
     }
 
-    // 尝试从队列弹出元素
-    // 如果队列为空但未结束，返回true；如果成功获取元素，也返回true
+    // Try to pop an element from the queue
+    // Returns true if the queue is empty but not finished; also returns true if an element is successfully retrieved
     bool try_pop(T& value) {
         std::unique_lock<std::mutex> lock(mutex_);
         
-        // 等待直到队列非空或已结束
+        // Wait until the queue is not empty or finished
         cond_.wait(lock, [this] {
             return !queue_.empty() || is_finished_;
         });
 
-        // 如果队列为空且已结束，返回false
+        // If the queue is empty and finished, return false
         if (queue_.empty()) {
             return !is_finished_;
         }
 
-        // 获取队列首个元素
+        // Retrieve the first element in the queue
         value = std::move(queue_.front());
         queue_.pop();
         return true;
     }
 
-    // 标记队列已完成
+    // Mark the queue as finished
     void finish() {
         std::lock_guard<std::mutex> lock(mutex_);
         is_finished_ = true;
         cond_.notify_all();
     }
 
-    // 检查队列是否已完成
+    // Check if the queue is finished
     bool is_finished() const {
         std::lock_guard<std::mutex> lock(mutex_);
         return is_finished_;

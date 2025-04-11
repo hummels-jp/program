@@ -14,13 +14,13 @@ public:
         const fs::path& startPath,
         ThreadSafeQueue<fs::path>& outputQueue,
         std::atomic<int>& foundCounter,
-        std::mutex& consoleMutex // 用于错误报告
+        std::mutex& consoleMutex // For error reporting
         );
 
-    // 返回true如果路径有效，否则返回false
+    // Returns true if the path is valid, otherwise false
     bool isValid() const;
 
-    // 执行目录遍历
+    // Perform directory traversal
     void run();
 
 private:

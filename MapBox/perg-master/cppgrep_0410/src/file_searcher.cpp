@@ -19,14 +19,13 @@ FileSearcher::FileSearcher(
       matches_found_count_(matchCounter),
       output_mutex_(consoleMutex) {}
 
-// 准备搜索
-// 通过编译正则表达式和将查询转换为小写来准备搜索
-// 如果正则表达式无效，则返回false
-// 如果正则表达式有效，则返回true
+// Prepare for search
+// Prepare the search by compiling the regular expression and converting the query to lowercase
+// Returns false if the regular expression is invalid
+// Returns true if the regular expression is valid
 bool FileSearcher::prepareSearch() {
-    // 该函数在每个线程中调用一次
-    // 仅在使用正则表达式时编译正则表达式
-    // 如果使用正则表达式，则编译正则表达式
+    // This function is called once in each thread
+    // Compile the regular expression only when using regex
     if (options_.use_regex) 
     {
         try {
@@ -53,44 +52,42 @@ bool FileSearcher::prepareSearch() {
     return true;
 }
 
-// 线程函数
-// 该函数在每个线程中调用一次
-// 该函数从输入队列中弹出文件路径并搜索文件
-// 如果文件路径为空，则检查完成状态
-// 如果完成状态为true，则退出循环
-// 如果完成状态为false，则继续弹出文件路径
-// 如果文件路径不为空，则搜索文件
+// Thread function
+// This function is called once in each thread
+// This function pops file paths from the input queue and searches the files
+// If the file path is empty, check the finished state
+// If the finished state is true, exit the loop
+// If the finished state is false, continue popping file paths
+// If the file path is not empty, search the file
 void FileSearcher::operator()() {
     if (!prepareSearch() && options_.use_regex) {
-        return; // 如果正则表达式无效则退出
+        return; // Exit if the regular expression is invalid
     }
 
     fs::path current_file;
-    // try_pop在弹出项目时或队列为空但未完成时返回true
+    // try_pop returns true when popping an item or when the queue is empty but not yet finished
     while (file_queue_.try_pop(current_file)) {
         if (current_file.empty()) {
-             // 虚假唤醒或在完成标志完全设置前被notify_all唤醒？
-             // 再次显式检查完成状态
+             // Spurious wakeup or notified before the finished flag is fully set?
+             // Explicitly check the finished state again
              if (file_queue_.is_finished()) break;
-             continue; // 队列为空，重试
+             continue; // Queue is empty, retry
         }
         searchFile(current_file);
-        current_file.clear(); // 为下一次迭代重置
+        current_file.clear(); // Reset for the next iteration
     }
 }
 
-// 搜索文件
-// 读取文件的每一行并检查是否匹配
-// 如果找到匹配项，则将结果推送到结果队列
-// 如果文件无法打开，则跳过该文件
-// 如果文件是二进制文件，则跳过该文件
-// 如果读取文件时发生错误，则记录错误
-// 使用共享互斥锁进行控制台输出
-// 读取文件的每一行并检查是否匹配
-// 如果找到匹配项，则将结果推送到结果队列
+// Search file
+// Read each line of the file and check for matches
+// If a match is found, push the result to the result queue
+// Skip the file if it cannot be opened
+// Skip the file if it is a binary file
+// Log errors if an error occurs while reading the file
+// Use a shared mutex for console output
 void FileSearcher::searchFile(const fs::path& file_path) 
 {
-    // read the file in binary mode
+    // Read the file in binary mode
     std::ifstream file_stream(file_path, std::ios::binary);
     if (!file_stream.is_open()) {
         return; // Skip files we can't open
@@ -102,7 +99,7 @@ void FileSearcher::searchFile(const fs::path& file_path)
         while (std::getline(file_stream, line)) {
             line_number++;
             if (Utils::is_likely_binary(line)) {
-                break; // 跳过可能的二进制文件
+                break; // Skip likely binary files
             }
             bool match_found = false;
             if (options_.use_regex) {
@@ -119,9 +116,9 @@ void FileSearcher::searchFile(const fs::path& file_path)
             }
         }
     } catch (const std::exception& e) {
-        // 记录读取文件时的错误 - 使用共享互斥锁进行控制台输出
+        // Log errors while reading the file - use shared mutex for console output
         std::lock_guard<std::mutex> lock(output_mutex_);
-        std::cerr << "读取文件时出错 " << file_path << ": " << e.what() << std::endl;
+        std::cerr << "Error reading file " << file_path << ": " << e.what() << std::endl;
     }
     files_processed_count_++;
 }

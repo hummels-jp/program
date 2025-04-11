@@ -4,13 +4,13 @@
 #include <filesystem>
 #include <string>
 
-// 搜索参数配置结构体
+// Search parameter configuration structure
 struct SearchOptions {
-    std::string query;                    // 搜索词或正则表达式
-    std::filesystem::path directory;      // 搜索目录路径
-    bool ignore_case = false;            // 是否忽略大小写
-    bool use_regex = false;              // 是否使用正则表达式
-    unsigned int num_threads = 2;         // 工作线程数
+    std::string query;                    // Search term or regular expression
+    std::filesystem::path directory;      // Directory path for search
+    bool ignore_case = false;             // Whether to ignore case
+    bool use_regex = false;               // Whether to use regular expressions
+    unsigned int num_threads = 2;         // Number of worker threads
 };
 
 #endif // OPTIONS_H
