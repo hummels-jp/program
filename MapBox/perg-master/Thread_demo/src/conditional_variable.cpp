@@ -1,81 +1,62 @@
-#include <iostream>
-#include <thread>
-#include <mutex>
-#include <condition_variable>
-#include <queue>
+#include<vector>
+#include<thread>
+#include<mutex>
+#include<condition_variable>
+#include<iostream>
+using namespace std;
 #include "conditional_variable.h"
-// Producer-Consumer Model
 
-std::mutex mtx; // Mutex
-std::condition_variable cv; // Condition variable
-std::queue<int> buffer; // Buffer
-const unsigned int MAX_BUFFER_SIZE = 5; // Buffer size
-bool done = false;  // Control whether production is complete
+static int num = 0;
+static mutex mtx;
+static condition_variable cv;
+static bool ready = false;
 
-// Producer thread function
-void producer() {
-    for (int i = 1; i <= 10; ++i) 
-    {
-        // producer thread get the lock
-        std::unique_lock<std::mutex> lock(mtx);
-        // producer thread will wait if the buffer is full
-        // block the thread until the condition is not met
-        // current thread will release the mutex and block until notified
-        cv.wait(lock, [] { return buffer.size() < MAX_BUFFER_SIZE; }); // Wait for space
+void f1()
+{
+    // create 10 threads, but each thread will wait for the condition variable
+    cout << "Thread Type1: waiting for the condition variable" << this_thread::get_id() << endl;
 
-        // Produce an item
-        buffer.push(i);
-        std::cout << "Produced: " << i << std::endl;
+    unique_lock<mutex> lck(mtx); // gets the mutex
+    // 
+    // while (ready ==false) // wait until ready is true
+    // {
+    //     cv.wait(lck); // releases the mutex and waits
+    // }
+    // wati ready to be true, releases the mutex and waits
+    cv.wait(lck, [] { return ready; }); // releases the mutex and waits
 
-        // Notify the consumer that an item has been produced
-        // cv.notify_one(); // Notify the consumer
-    }
-
-    // Notify the consumer that production is complete
-    {
-        std::lock_guard<std::mutex> lock(mtx);
-        done = true;
-    }
-
-    // Notify the consumer to exit if it is waiting
-    cv.notify_all();
+    cout << "Thread 1: " << num << "finished" << endl;
+    
 }
 
-// Consumer thread function
-void consumer() {
-    // Consume items from the buffer
-    while (true) {
-        // consmer thread get the lock
-        std::unique_lock<std::mutex> lock(mtx);
-        // consumer thread will wait if the buffer is empty or production is not done
-        // block the thread if the condition is not met
-        // current thread will release the mutex and block until notified
-        cv.wait(lock, [] { return !buffer.empty() || done; }); // 
-
-        // If the buffer is empty and production is complete, exit
-        while (!buffer.empty()) {
-            int item = buffer.front();
-            buffer.pop();
-            std::cout << "  Consumed: " << item << std::endl;
-        }
-
-        if (done) break;
-
-        cv.notify_one(); // Notify the producer to continue
+void update()
+{
+    {
+        lock_guard<mutex> lck(mtx); // gets the mutex
+        num = 42; // update the shared variable
+        ready = true; // set the condition to true
     }
+    // cv.notify_all(); // notify all waiting threads
+    // cv.notify_one(); // notify one waiting thread
 }
 
-int conditional_variable_demo() {
-    std::thread p1(producer);
-    std::thread p2(producer);
-    std::thread c1(consumer);
-    std::thread c2(consumer);
+int conditional_variable_demo()
+{
+    vector<thread> threads(10);
+    for (int i = 0; i < 10; ++i)
+    {
+        threads[i] = thread(f1); // create threads
+    }
 
-    p1.join();
-    p2.join();
-    c1.join();
-    c2.join();
+    thread t(update); // create a thread to update the shared variable
+    t.join(); // wait for the update thread to finish
 
-    std::cout << "All done.\n";
+    for (int  i = 0; i < 10; i++)
+    {
+        /* code */
+        threads[i].join(); // wait for all threads to finish
+    }
+
+
     return 0;
 }

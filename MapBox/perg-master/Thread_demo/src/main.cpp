@@ -20,7 +20,7 @@ int main()
     // unique_lock_demo();
     // shared_mutext_demo();
     // atomic_demo();
-    // conditional_variable_demo();
+    conditional_variable_demo();
     // semaphore_demo(); // Call the semaphore demo function
     // async_demo(); // Call the async demo function
     // promise_demo(); // Call the promise demo function
@@ -29,6 +29,6 @@ int main()
     // optional_demo(); // Call the optional demo function
     // regex_search_demo(); // Call the regex search demo function
     // functor_demo(); // Call the functor demo function
-    mutex_demo(); // Call the mutex demo function
+    // mutex_demo(); // Call the mutex demo function
     return 0;
 }
