@@ -1,63 +1,62 @@
-#include <iostream>
-#include <thread>
-#include <mutex>
-#include <condition_variable>
-#include <queue>
-
+#include<vector>
+#include<thread>
+#include<mutex>
+#include<condition_variable>
+#include<iostream>
+using namespace std;
 #include "conditional_variable.h"
 
-static std::mutex mtx; // Mutex for protecting shared data
-std::condition_variable cv; // Condition variable for synchronization
-std::queue<int> dataQueue; // Queue to hold produced data
-bool done = false; // Flag to indicate when the producer is done
+static int num = 0;
+static mutex mtx;
+static condition_variable cv;
+static bool ready = false;
 
-// This program demonstrates the use of std::condition_variable to synchronize producer and consumer threads.
-void producer() {
-    for (int i = 0; i < 10; ++i) {
-        std::this_thread::sleep_for(std::chrono::milliseconds(100));
-        std::unique_lock<std::mutex> lock(mtx); // Lock the mutex
-        dataQueue.push(i); // Produce data and push it to the queue
-        std::cout << "Produced: " << i << std::endl;
-        // cv.notify_one(); // Notify one waiting consumer thread
-    }
+void f1()
+{
+    // create 10 threads, but each thread will wait for the condition variable
+    cout << "Thread Type1: waiting for the condition variable" << this_thread::get_id() << endl;
 
-    std::unique_lock<std::mutex> lock(mtx);
-    done = true; // Set the done flag to true
-    // cv.notify_all(); // Notify all waiting consumer threads
+    unique_lock<mutex> lck(mtx); // gets the mutex
+    // 
+    // while (ready ==false) // wait until ready is true
+    // {
+    //     cv.wait(lck); // releases the mutex and waits
+    // }
+    // wati ready to be true, releases the mutex and waits
+    cv.wait(lck, [] { return ready; }); // releases the mutex and waits
 
+    cout << "Thread 1: " << num << "finished" << endl;
+    
 }
 
-// Function to consume data from the queue
-void consumer() {
-    while (true) {
-        std::unique_lock<std::mutex> lock(mtx); // Lock the mutex
-        // Wait until there is data in the queue or the producer is done
-        // The lambda function checks if the queue is empty and if the producer is done
-        // cv.wait(lock); // Wait for notification 等待通知，释放锁
-        cv.wait(lock, [] { return !dataQueue.empty() || done; }); // 条件变量，必须等到通知，同时满足条件，才能被唤醒
-
-        while (!dataQueue.empty()) {
-            int value = dataQueue.front();
-            dataQueue.pop();
-            std::cout << "Consumed: " << value << std::endl;
-        }
-
-        // If the producer is done and the queue is empty, exit the loop
-        // This check is necessary to avoid a spurious wakeup
-        if (done && dataQueue.empty()) {
-            break;
-        }
+void update()
+{
+    {
+        lock_guard<mutex> lck(mtx); // gets the mutex
+        num = 42; // update the shared variable
+        ready = true; // set the condition to true
     }
+    // cv.notify_all(); // notify all waiting threads
+    // cv.notify_one(); // notify one waiting thread
 }
 
-int conditional_variable_demo() {
-    std::thread producerThread(producer);
-    std::thread consumerThread(consumer);
+int conditional_variable_demo()
+{
+    vector<thread> threads(10);
+    for (int i = 0; i < 10; ++i)
+    {
+        threads[i] = thread(f1); // create threads
+    }
 
-    producerThread.join();
-    done = true; // Set the done flag to true
-    cv.notify_all(); // Notify all waiting consumer threads
-    consumerThread.join();
+    thread t(update); // create a thread to update the shared variable
+    t.join(); // wait for the update thread to finish
+
+    for (int  i = 0; i < 10; i++)
+    {
+        /* code */
+        threads[i].join(); // wait for all threads to finish
+    }
+
 
     return 0;
 }

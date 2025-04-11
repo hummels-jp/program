@@ -2,23 +2,18 @@
     // Use IntelliSense to learn about possible attributes.
     // Hover to view descriptions of existing attributes.
     // For more information, visit: https://go.microsoft.com/fwlink/?linkid=830387
-    // -h shows help
-    // -i hello ${workspaceFolder}/test_dir/file1.txt  case-insensitive
-    // -r "((\\w+)(\\.?\\w+)*@(\\w+)(\\.\\w+)+)" ${workspaceFolder}/test_dir/emails.txt regular expression
-    // @ ${workspaceFolder}/test_dir  special character
-    // world ${workspaceFolder}/test_dir
     "version": "0.2.0",
     "configurations": [
         {
             "name": "Debug cppgrep (GDB)", // Your name for this config
             "type": "cppdbg",              // Debugger type: gdb/lldb
             "request": "launch",           // Action: launch the program
-            "program": "${workspaceFolder}/bin/cppgrep", // Path to executable (NO .exe for Linux)
+            "program": "${workspaceFolder}/bin/cppgrep.exe", // Path to executable (NO .exe for Linux)
                                          // Use cppgrep.exe for Windows MinGW
             "args": [                      // Command line arguments as an array of strings
-                                    // Arg 0: Option (e.g., -i for case-insensitive)
-                "world",                   // Arg 1: Query
-                "${workspaceFolder}/test_dir"              // Arg 2: Directory (relative to cwd)
+                "-i",
+                "hello",                   // Arg 1: Query
+                "../test_dir/file1.txt"              // Arg 2: Directory (relative to cwd)
                 // Add other args like "-i", "world", "../test_dir" for different tests
             ],
             "stopAtEntry": false,          // false = run until breakpoint, true = stop at main()

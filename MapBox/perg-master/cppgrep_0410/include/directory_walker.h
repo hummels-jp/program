@@ -11,24 +11,24 @@ namespace fs = std::filesystem;
 class DirectoryWalker {
 public:
     DirectoryWalker(
-        const fs::path& startPath,
-        ThreadSafeQueue<fs::path>& outputQueue,
-        std::atomic<int>& foundCounter,
-        std::mutex& consoleMutex // 用于错误报告
+        const fs::path& startPath, // Starting path for the directory traversal
+        ThreadSafeQueue<fs::path>& outputQueue, // Thread-safe queue for file paths
+        std::atomic<int>& foundCounter, // Counter for files found
+        std::mutex& consoleMutex // For error reporting
         );
 
-    // 返回true如果路径有效，否则返回false
+    // Returns true if the path is valid, otherwise false
     bool isValid() const;
 
-    // 执行目录遍历
+    // Perform directory traversal
     void run();
 
 private:
-    fs::path start_path_;
-    ThreadSafeQueue<fs::path>& file_queue_;
-    std::atomic<int>& files_found_count_;
-    std::mutex& output_mutex_;
-    bool is_valid_path_ = false;
+    fs::path start_path_; // Starting path
+    ThreadSafeQueue<fs::path>& file_queue_; // Thread-safe file queue
+    std::atomic<int>& files_found_count_; // File counter
+    std::mutex& output_mutex_; // Mutex for console output
+    bool is_valid_path_ = false; // Whether the path is valid
 };
 
 #endif // DIRECTORY_WALKER_H
