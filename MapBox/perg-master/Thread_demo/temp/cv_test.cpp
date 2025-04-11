@@ -52,7 +52,7 @@ private:
 
 
 void producer(ThreadSafeQuere* q) {
-    for (int i = 0; i < 100; i++)
+    for (int i = 0; i < 10; i++)
     {
         q->put(i);
         std::this_thread::sleep_for(std::chrono::microseconds(100));
@@ -61,17 +61,18 @@ void producer(ThreadSafeQuere* q) {
 }
 
 void consumer(ThreadSafeQuere* q) {
-    for (int i = 0; i < 100; i++)
+    for (int i = 0; i < 10; i++)
     {
         /* code */
         q->get();
-        std::this_thread::sleep_for(std::chrono::microseconds(100));
+        std::this_thread::sleep_for(std::chrono::microseconds(200));
     }
     
 }
 
+ThreadSafeQuere buffer;
 int main() {
-    ThreadSafeQuere buffer;
+    
     std::thread p1(producer, &buffer);
     // std::thread p2(producer, &buffer);
     std::thread c1(consumer, &buffer);
