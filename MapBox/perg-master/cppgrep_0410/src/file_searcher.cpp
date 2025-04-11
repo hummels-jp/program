@@ -5,6 +5,7 @@
 #include <string>
 #include <system_error> // For regex_error
 
+// Constructor
 FileSearcher::FileSearcher(
     const SearchOptions& opts,
     ThreadSafeQueue<fs::path>& inputFileQueue,
@@ -87,8 +88,9 @@ void FileSearcher::operator()() {
 // Use a shared mutex for console output
 void FileSearcher::searchFile(const fs::path& file_path) 
 {
-    // Read the file in binary mode
-    std::ifstream file_stream(file_path, std::ios::binary);
+    // Read the file i
+    // std::ifstream file_stream(file_path, std::ios::binary);
+    std::ifstream file_stream(file_path, std::ios::in);
     if (!file_stream.is_open()) {
         return; // Skip files we can't open
     }

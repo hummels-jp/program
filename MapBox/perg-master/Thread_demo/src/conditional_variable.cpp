@@ -3,61 +3,79 @@
 #include <mutex>
 #include <condition_variable>
 #include <queue>
-
 #include "conditional_variable.h"
+// Producer-Consumer Model
 
-static std::mutex mtx; // Mutex for protecting shared data
-std::condition_variable cv; // Condition variable for synchronization
-std::queue<int> dataQueue; // Queue to hold produced data
-bool done = false; // Flag to indicate when the producer is done
+std::mutex mtx; // Mutex
+std::condition_variable cv; // Condition variable
+std::queue<int> buffer; // Buffer
+const unsigned int MAX_BUFFER_SIZE = 5; // Buffer size
+bool done = false;  // Control whether production is complete
 
-// This program demonstrates the use of std::condition_variable to synchronize producer and consumer threads.
+// Producer thread function
 void producer() {
-    for (int i = 0; i < 10; ++i) {
-        std::this_thread::sleep_for(std::chrono::milliseconds(100));
-        std::unique_lock<std::mutex> lock(mtx); // Lock the mutex
-        dataQueue.push(i); // Produce data and push it to the queue
+    for (int i = 1; i <= 10; ++i) 
+    {
+        // producer thread get the lock
+        std::unique_lock<std::mutex> lock(mtx);
+        // producer thread will wait if the buffer is full
+        // block the thread until the condition is not met
+        // current thread will release the mutex and block until notified
+        cv.wait(lock, [] { return buffer.size() < MAX_BUFFER_SIZE; }); // Wait for space
+
+        // Produce an item
+        buffer.push(i);
         std::cout << "Produced: " << i << std::endl;
-        // cv.notify_one(); // Notify one waiting consumer thread
+
+        // Notify the consumer that an item has been produced
+        // cv.notify_one(); // Notify the consumer
     }
 
-    std::unique_lock<std::mutex> lock(mtx);
-    done = true; // Set the done flag to true
-    // cv.notify_all(); // Notify all waiting consumer threads
+    // Notify the consumer that production is complete
+    {
+        std::lock_guard<std::mutex> lock(mtx);
+        done = true;
+    }
 
+    // Notify the consumer to exit if it is waiting
+    cv.notify_all();
 }
 
-// Function to consume data from the queue
+// Consumer thread function
 void consumer() {
+    // Consume items from the buffer
     while (true) {
-        std::unique_lock<std::mutex> lock(mtx); // Lock the mutex
-        // Wait until there is data in the queue or the producer is done
-        // The lambda function checks if the queue is empty and if the producer is done
-        // cv.wait(lock); // Wait for notification 等待通知，释放锁
-        cv.wait(lock, [] { return !dataQueue.empty() || done; }); // 条件变量，必须等到通知，同时满足条件，才能被唤醒
+        // consmer thread get the lock
+        std::unique_lock<std::mutex> lock(mtx);
+        // consumer thread will wait if the buffer is empty or production is not done
+        // block the thread if the condition is not met
+        // current thread will release the mutex and block until notified
+        cv.wait(lock, [] { return !buffer.empty() || done; }); // 
 
-        while (!dataQueue.empty()) {
-            int value = dataQueue.front();
-            dataQueue.pop();
-            std::cout << "Consumed: " << value << std::endl;
+        // If the buffer is empty and production is complete, exit
+        while (!buffer.empty()) {
+            int item = buffer.front();
+            buffer.pop();
+            std::cout << "  Consumed: " << item << std::endl;
         }
 
-        // If the producer is done and the queue is empty, exit the loop
-        // This check is necessary to avoid a spurious wakeup
-        if (done && dataQueue.empty()) {
-            break;
-        }
+        if (done) break;
+
+        cv.notify_one(); // Notify the producer to continue
     }
 }
 
 int conditional_variable_demo() {
-    std::thread producerThread(producer);
-    std::thread consumerThread(consumer);
+    std::thread p1(producer);
+    std::thread p2(producer);
+    std::thread c1(consumer);
+    std::thread c2(consumer);
 
-    producerThread.join();
-    done = true; // Set the done flag to true
-    cv.notify_all(); // Notify all waiting consumer threads
-    consumerThread.join();
+    p1.join();
+    p2.join();
+    c1.join();
+    c2.join();
 
+    std::cout << "All done.\n";
     return 0;
 }

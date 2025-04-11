@@ -25,19 +25,19 @@ int Grepper::run(int argc, char* argv[]) {
     if (options.ignore_case) std::cout << "Option: Ignore case" << std::endl;
     if (options.use_regex) std::cout << "Option: Use regular expressions" << std::endl;
 
-    ThreadSafeQueue<fs::path> fileQueue; // 线程安全的文件队列
-    ThreadSafeQueue<Result> resultQueue; // 线程安全的结果队列
+    ThreadSafeQueue<fs::path> fileQueue; // Thread-safe file queue
+    ThreadSafeQueue<Result> resultQueue; // Thread-safe result queue
 
     // --- Start threads ---
     std::vector<std::thread> workerThreads;
     workerThreads.reserve(options.num_threads);
 
-    // Walker (producer) thread
+    // Walker (producer) thread: finds files and adds them to the queue
     DirectoryWalker walker(options.directory, fileQueue, files_found_count_, output_mutex_);
     if (!walker.isValid()) return 1; // Exit if initial path check fails
     std::thread walkerThread(&DirectoryWalker::run, &walker);
 
-    // Searcher (consumer) threads
+    // Searcher (consumer) threads: process files from the queue
     for (unsigned int i = 0; i < options.num_threads; ++i) {
          // Each searcher gets references to the queue, counters, options, and mutex
          workerThreads.emplace_back(FileSearcher{options, fileQueue, resultQueue,
