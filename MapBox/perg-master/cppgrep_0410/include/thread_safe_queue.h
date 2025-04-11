@@ -5,7 +5,10 @@
 #include <mutex>
 #include <condition_variable>
 
-// Thread-safe queue template class
+// Thread-safe queue template class using condition variables
+// This class provides a thread-safe queue implementation with push, try_pop, and finish methods    
+// It uses a mutex for synchronization and a condition variable to notify waiting threads
+// The queue can be used to safely pass data between threads
 template<typename T>
 class ThreadSafeQueue {
 public:
