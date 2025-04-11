@@ -8,7 +8,7 @@
             "name": "Debug cppgrep (GDB)", // Your name for this config
             "type": "cppdbg",              // Debugger type: gdb/lldb
             "request": "launch",           // Action: launch the program
-            "program": "${workspaceFolder}/bin/cppgrep.exe", // Path to executable (NO .exe for Linux)
+            "program": "${workspaceFolder}/bin/cppgrep", // Path to executable (NO .exe for Linux)
                                          // Use cppgrep.exe for Windows MinGW
             "args": [                      // Command line arguments as an array of strings
                 "-i",
