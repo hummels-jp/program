@@ -25,8 +25,8 @@ int Grepper::run(int argc, char* argv[]) {
     if (options.ignore_case) std::cout << "Option: Ignore case" << std::endl;
     if (options.use_regex) std::cout << "Option: Use regular expressions" << std::endl;
 
-    ThreadSafeQueue<fs::path> fileQueue;
-    ThreadSafeQueue<Result> resultQueue;
+    ThreadSafeQueue<fs::path> fileQueue; // 线程安全的文件队列
+    ThreadSafeQueue<Result> resultQueue; // 线程安全的结果队列
 
     // --- Start threads ---
     std::vector<std::thread> workerThreads;

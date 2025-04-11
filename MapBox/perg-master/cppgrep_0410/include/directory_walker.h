@@ -24,11 +24,11 @@ public:
     void run();
 
 private:
-    fs::path start_path_;
-    ThreadSafeQueue<fs::path>& file_queue_;
-    std::atomic<int>& files_found_count_;
-    std::mutex& output_mutex_;
-    bool is_valid_path_ = false;
+    fs::path start_path_; // 起始路径
+    ThreadSafeQueue<fs::path>& file_queue_; // 线程安全的文件队列
+    std::atomic<int>& files_found_count_; // 文件计数器
+    std::mutex& output_mutex_; // 互斥锁用于控制台输出
+    bool is_valid_path_ = false; // 路径是否有效
 };
 
 #endif // DIRECTORY_WALKER_H
