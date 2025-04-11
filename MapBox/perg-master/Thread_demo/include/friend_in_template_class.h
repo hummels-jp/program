@@ -1,0 +1,1 @@
+int friend_in_template_class_demo();

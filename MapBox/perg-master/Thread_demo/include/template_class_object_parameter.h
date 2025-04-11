@@ -1,0 +1,1 @@
+int template_class_object_parameter_demo();
