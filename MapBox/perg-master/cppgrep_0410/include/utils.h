@@ -13,7 +13,7 @@ namespace Utils {
         return str;
     }
 
-    // Check if a string is likely binary content
+    // Check if a string is likely binary content, null characters are common in binary files but not common in text files
     inline bool is_likely_binary(const std::string& str) {
         // Check if the first 1024 characters contain null characters
         const size_t check_length = std::min(str.length(), size_t(1024));

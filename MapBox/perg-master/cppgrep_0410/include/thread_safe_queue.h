@@ -22,6 +22,7 @@ public:
         std::unique_lock<std::mutex> lock(mutex_);
         
         // Wait until the queue is not empty or finished
+        // if the queue is empty or not finished, release the lock and wait
         cond_.wait(lock, [this] {
             return !queue_.empty() || is_finished_;
         });
@@ -51,10 +52,10 @@ public:
     }
 
 private:
-    mutable std::mutex mutex_;
-    std::condition_variable cond_;
-    std::queue<T> queue_;
-    bool is_finished_ = false;
+    mutable std::mutex mutex_; // Mutex for thread safety
+    std::condition_variable cond_; // Condition variable for synchronization
+    std::queue<T> queue_; // Underlying queue
+    bool is_finished_ = false; // Flag to indicate if the queue is finished
 };
 
 #endif // THREAD_SAFE_QUEUE_H

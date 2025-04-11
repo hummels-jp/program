@@ -98,17 +98,26 @@ void FileSearcher::searchFile(const fs::path& file_path)
     std::string line;
     int line_number = 0;
     try {
-        while (std::getline(file_stream, line)) {
+        while (std::getline(file_stream, line)) 
+        {
             line_number++;
             if (Utils::is_likely_binary(line)) {
                 break; // Skip likely binary files
             }
             bool match_found = false;
-            if (options_.use_regex) {
+            // using regex for search
+            if (options_.use_regex) 
+            {
+                // Check if the line matches the regex pattern
                 match_found = std::regex_search(line, pattern_);
-            } else if (options_.ignore_case) {
+            } 
+            // using string::find for case-insensitive search
+            else if (options_.ignore_case) 
+            {
+                // Convert line to lowercase for case-insensitive search
                 match_found = Utils::to_lower(line).find(query_lower_) != std::string::npos;
             } else {
+                // using string::find for case-sensitive search
                 match_found = line.find(options_.query) != std::string::npos;
             }
 
@@ -117,7 +126,8 @@ void FileSearcher::searchFile(const fs::path& file_path)
                 matches_found_count_++;
             }
         }
-    } catch (const std::exception& e) {
+    } 
+    catch (const std::exception& e) {
         // Log errors while reading the file - use shared mutex for console output
         std::lock_guard<std::mutex> lock(output_mutex_);
         std::cerr << "Error reading file " << file_path << ": " << e.what() << std::endl;

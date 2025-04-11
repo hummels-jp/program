@@ -10,6 +10,7 @@
 #include <chrono>
 #include <optional> // For optional<SearchOptions>
 
+// Grepper class constructor
 int Grepper::run(int argc, char* argv[]) {
     ArgumentParser parser;
     std::optional<SearchOptions> optionsOpt = parser.parse(argc, argv);
