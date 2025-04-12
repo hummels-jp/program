@@ -11,7 +11,8 @@
 #include <optional> // For optional<SearchOptions>
 
 // Grepper class constructor
-int Grepper::run(int argc, char* argv[]) {
+int Grepper::run(int argc, char* argv[]) 
+{
     ArgumentParser parser;
     std::optional<SearchOptions> optionsOpt = parser.parse(argc, argv);
 
@@ -34,8 +35,11 @@ int Grepper::run(int argc, char* argv[]) {
     workerThreads.reserve(options.num_threads);
 
     // Walker (producer) thread: finds files and adds them to the queue
+    // 
     DirectoryWalker walker(options.directory, fileQueue, files_found_count_, output_mutex_);
     if (!walker.isValid()) return 1; // Exit if initial path check fails
+    // thread entrance function is DirectoryWalker::run() which is a member function of DirectoryWalker
+    // walker is passed as a reference to the thread
     std::thread walkerThread(&DirectoryWalker::run, &walker);
 
     // Searcher (consumer) threads: process files from the queue
