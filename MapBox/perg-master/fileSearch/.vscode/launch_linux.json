@@ -1,0 +1,44 @@
+{
+    // Use IntelliSense to learn about possible attributes.
+    // Hover to view descriptions of existing attributes.
+    // For more information, visit: https://go.microsoft.com/fwlink/?linkid=830387
+    "version": "0.2.0",
+    "configurations": [
+        {
+            "name": "Debug cppgrep (GDB)", // Your name for this config
+            "type": "cppdbg",              // Debugger type: gdb/lldb
+            "request": "launch",           // Action: launch the program
+            "program": "${workspaceFolder}/bin/cppgrep", // Path to executable (NO .exe for Linux)
+                                         // Use cppgrep.exe for Windows MinGW
+            "args": [                      // Command line arguments as an array of strings
+                "-i",
+                "hello",                   // Arg 1: Query
+                "../test_dir/file1.txt"              // Arg 2: Directory (relative to cwd)
+                // Add other args like "-i", "world", "../test_dir" for different tests
+            ],
+            "stopAtEntry": false,          // false = run until breakpoint, true = stop at main()
+            "cwd": "${workspaceFolder}",   // Working directory when program runs. Project root is often convenient.
+            "environment": [],             // Optional environment variables [{ "name": "key", "value": "value" }]
+            "externalConsole": false,      // false = use VSCode Debug Console, true = use external terminal
+            "MIMode": "gdb",               // Explicitly use GDB
+            // Optional: If gdb isn't in PATH, uncomment and set the path
+            // "miDebuggerPath": "/path/to/your/gdb", // e.g., "F:/ProgramFiles/mingw64/bin/gdb.exe" on Windows
+            "setupCommands": [             // Commands to run when GDB starts
+                {
+                    "description": "Enable pretty-printing for gdb",
+                    "text": "-enable-pretty-printing",
+                    "ignoreFailures": true
+                },
+                {
+                    "description":  "Set Disassembly Flavor to Intel",
+                    "text": "-gdb-set disassembly-flavor intel",
+                    "ignoreFailures": true
+                }
+            ],
+            // Optional: Run build task before debugging
+            // "preLaunchTask": "CMake: build"
+        }
+        // You can add more configurations here for different arguments or settings
+        // Just copy the object above, paste it after the comma, and change name/args etc.
+    ]
+}
