@@ -11,21 +11,21 @@ namespace fs = std::filesystem;
 
 class FileSearch {
 public:
-    // 构造函数
+    // Constructor
     FileSearch(const fs::path& directory, const SearchOption& options);
 
-    // 搜索目录中的文件
+    // Search files in the directory
     void search_directory(std::vector<SearchResult>& results);
 
 private:
-    // 搜索单个文件
+    // Search a single file
     bool search_file(const fs::path& file_path, std::vector<SearchResult>& results);
 
-    // 转换字符串为小写
+    // Convert a string to lowercase
     std::string to_lowercase(const std::string& str) const;
 
-    fs::path directory_;       // 搜索的目录路径
-    SearchOption options_;     // 搜索选项
+    fs::path directory_;       // Directory path to search
+    SearchOption options_;     // Search options
 };
 
 #endif // FILE_SEARCH_H

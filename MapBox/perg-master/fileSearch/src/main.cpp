@@ -6,20 +6,20 @@
 #include <vector>
 
 int main(int argc, char* argv[]) {
-    // 使用 SearchOption::parseArguments 解析命令行参数
+    // Parse command-line arguments using SearchOption::parseArguments
     SearchOption options = SearchOption::parseArguments(argc, argv);
 
-    // 创建 FileSearch 对象
+    // Create a FileSearch object
     FileSearch file_search(options.getDirectoryPath(), options);
 
-    // 存储搜索结果
+    // Store search results
     std::vector<SearchResult> results;
 
     try {
-        // 执行搜索
+        // Perform the search
         file_search.search_directory(results);
 
-        // 输出所有结果
+        // Output all results
         for (const auto& result : results) {
             std::cout << "File: " << result.getFilePath();
             if (options.isCountOnly() || options.isListOnly() || options.isListOnlyNonMatching()) {
@@ -28,9 +28,9 @@ int main(int argc, char* argv[]) {
             }
             std::cout << ", Line: " << result.getLineNumber();
 
-            // 检查是否启用了 --color 选项
+            // Check if the --color option is enabled
             if (options.isHighlightMatch()) {
-                // 使用正则表达式高亮匹配的关键字
+                // Highlight matching keywords using regular expressions
                 std::string content = result.getLineContent();
                 for (const auto& keyword : options.getKeywords()) {
                     std::regex keyword_regex(keyword, options.isIgnoreCase() ? std::regex::icase : std::regex::ECMAScript);

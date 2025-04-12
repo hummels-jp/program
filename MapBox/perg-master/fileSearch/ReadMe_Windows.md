@@ -1,12 +1,14 @@
 # fileSearch Tool Documentation
-# build
-# install git bash
-# download MinGW，add the gcc g++ directory path to environment variable
-# warning: notice the gcc file path in file ./toolchain-mingw.cmake, you should change to your path
-# go the ./build directory and run the command as follow
-# cmake -G "MinGW Makefiles" -DCMAKE_TOOLCHAIN_FILE=../toolchain-mingw.cmake ..
-# make
 
+## Build Instructions
+1. Install Git Bash.
+2. Download MinGW and add the `gcc` and `g++` directory paths to the environment variable `PATH`.
+3. **Important**: Update the `gcc` file path in `./toolchain-mingw.cmake` to match your system's configuration.
+4. Navigate to the `./build` directory and run the following command:
+   ```bash
+   cmake -G "MinGW Makefiles" -DCMAKE_TOOLCHAIN_FILE=../toolchain-mingw.cmake ..
+   ```
+5. Run the `make` command to build the project.
 
 # Usage:
 # enter the bin directory ../bin/windows
