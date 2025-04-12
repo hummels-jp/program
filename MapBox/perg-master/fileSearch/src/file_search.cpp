@@ -33,6 +33,9 @@ bool FileSearch::search_file(const fs::path& file_path, std::vector<SearchResult
         if (options_.isIgnoreCase()) {
             flags |= std::regex::icase;
         }
+        if (options_.isExtendedRegex()) { // 如果启用了 -E 选项
+            flags = std::regex::extended; // 使用扩展正则表达式
+        }
         for (const auto& keyword : options_.getKeywords()) {
             regex_patterns.emplace_back(keyword, flags);
         }
@@ -46,7 +49,6 @@ bool FileSearch::search_file(const fs::path& file_path, std::vector<SearchResult
         ++line_number;
         bool match = false;
         std::string matched_content;
-        std::string highlighted_line = line;
 
         // 判断是否匹配
         if (options_.isUseRegex()) {
@@ -56,9 +58,6 @@ bool FileSearch::search_file(const fs::path& file_path, std::vector<SearchResult
                     match = true;
                     if (options_.isOutputOnlyMatch() && !match_result.empty()) { // 如果启用了 -o 选项
                         matched_content = match_result.str(); // 提取匹配的部分
-                    }
-                    if (options_.isHighlightMatch() && !match_result.empty()) { // 如果启用了 --color 选项
-                        highlighted_line = std::regex_replace(line, regex_pattern, "\033[1;31m$&\033[0m");
                     }
                     break; // 如果匹配成功，跳出循环
                 }
@@ -73,9 +72,6 @@ bool FileSearch::search_file(const fs::path& file_path, std::vector<SearchResult
                     if (options_.isOutputOnlyMatch()) { // 如果启用了 -o 选项
                         matched_content = line.substr(pos, keyword_to_check.length()); // 提取匹配的部分
                     }
-                    if (options_.isHighlightMatch()) { // 如果启用了 --color 选项
-                        highlighted_line.replace(pos, keyword_to_check.length(), "\033[1;31m" + keyword_to_check + "\033[0m");
-                    }
                     break; // 如果匹配成功，跳出循环
                 }
             }
@@ -88,7 +84,7 @@ bool FileSearch::search_file(const fs::path& file_path, std::vector<SearchResult
                 results.emplace_back(file_path, 0, ""); // 只记录文件名
                 return true; // 只需要记录一次文件名即可
             } else if (!options_.isCountOnly()) { // 如果不是 -c 选项，记录匹配的行或匹配的部分
-                results.emplace_back(file_path, line_number, options_.isOutputOnlyMatch() ? matched_content : highlighted_line);
+                results.emplace_back(file_path, line_number, options_.isOutputOnlyMatch() ? matched_content : line);
             }
             found = true;
         }

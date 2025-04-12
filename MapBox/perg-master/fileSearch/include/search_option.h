@@ -8,13 +8,13 @@
 class SearchOption {
 public:
     // 构造函数
-    SearchOption(const std::string& dir_path, const std::vector<std::string>& patterns, bool ignore = false, bool regex = false, bool invert = false, bool list = false, bool list_non_matching = false, bool count = false, bool output_only = false, bool highlight = false)
-        : directory_path(dir_path), keywords(patterns), ignore_case(ignore), use_regex(regex), invert_match(invert), list_only(list), list_only_non_matching(list_non_matching), count_only(count), output_only_match(output_only), highlight_match(highlight) {}
+    SearchOption(const std::string& dir_path, const std::vector<std::string>& patterns, bool ignore = false, bool regex = false, bool extended = false, bool invert = false, bool list = false, bool list_non_matching = false, bool count = false, bool output_only = false, bool highlight = false)
+        : directory_path(dir_path), keywords(patterns), ignore_case(ignore), use_regex(regex), extended_regex(extended), invert_match(invert), list_only(list), list_only_non_matching(list_non_matching), count_only(count), output_only_match(output_only), highlight_match(highlight) {}
 
     // 静态方法：解析命令行参数
     static SearchOption parseArguments(int argc, char* argv[]) {
         if (argc < 3) {
-            std::cerr << "Usage: " << argv[0] << " <directory_path> [-e pattern]... [-i] [-r] [-v] [-n] [-l] [-L] [-c] [-o] [--color]" << std::endl;
+            std::cerr << "Usage: " << argv[0] << " <directory_path> [-e pattern]... [-i] [-r] [-E] [-v] [-n] [-l] [-L] [-c] [-o] [--color]" << std::endl;
             exit(1);
         }
 
@@ -22,6 +22,7 @@ public:
         std::vector<std::string> patterns;
         bool ignore_case = false;
         bool use_regex = false;
+        bool extended_regex = false;
         bool invert_match = false;
         bool show_line_number = false;
         bool list_only = false;
@@ -43,6 +44,8 @@ public:
                 ignore_case = true;
             } else if (option == "-r") {
                 use_regex = true;
+            } else if (option == "-E") {
+                extended_regex = true;
             } else if (option == "-v") {
                 invert_match = true;
             } else if (option == "-n") {
@@ -68,7 +71,7 @@ public:
             exit(1);
         }
 
-        return SearchOption(directory_path, patterns, ignore_case, use_regex, invert_match, list_only, list_only_non_matching, count_only, output_only_match, highlight_match);
+        return SearchOption(directory_path, patterns, ignore_case, use_regex, extended_regex, invert_match, list_only, list_only_non_matching, count_only, output_only_match, highlight_match);
     }
 
     // 获取目录路径
@@ -89,6 +92,16 @@ public:
     // 是否使用正则表达式
     bool isUseRegex() const {
         return use_regex;
+    }
+
+    // 是否使用扩展正则表达式
+    bool isExtendedRegex() const {
+        return extended_regex;
+    }
+
+    // 设置扩展正则表达式选项
+    void setExtendedRegex(bool extended) {
+        extended_regex = extended;
     }
 
     // 是否反向匹配
@@ -126,6 +139,7 @@ private:
     std::vector<std::string> keywords;    // 搜索的关键词列表
     bool ignore_case;                     // 是否忽略大小写
     bool use_regex;                       // 是否使用正则表达式
+    bool extended_regex;                  // 是否使用扩展正则表达式
     bool invert_match;                    // 是否反向匹配
     bool list_only;                       // 是否只显示匹配的文件名
     bool list_only_non_matching;          // 是否只显示不包含匹配内容的文件名

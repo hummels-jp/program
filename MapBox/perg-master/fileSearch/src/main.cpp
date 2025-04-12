@@ -2,6 +2,7 @@
 #include "search_option.h"
 #include "search_result.h"
 #include <iostream>
+#include <regex>
 #include <vector>
 
 int main(int argc, char* argv[]) {
@@ -26,8 +27,16 @@ int main(int argc, char* argv[]) {
                 continue;
             }
             std::cout << ", Line: " << result.getLineNumber();
+
+            // 检查是否启用了 --color 选项
             if (options.isHighlightMatch()) {
-                std::cout << "  Content: \033[1;31m" << result.getLineContent() << "\033[0m" << std::endl;
+                // 使用正则表达式高亮匹配的关键字
+                std::string content = result.getLineContent();
+                for (const auto& keyword : options.getKeywords()) {
+                    std::regex keyword_regex(keyword, options.isIgnoreCase() ? std::regex::icase : std::regex::ECMAScript);
+                    content = std::regex_replace(content, keyword_regex, "\033[1;31m$&\033[0m");
+                }
+                std::cout << "  Content: " << content << std::endl;
             } else {
                 std::cout << "  Content: " << result.getLineContent() << std::endl;
             }
