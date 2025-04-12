@@ -58,7 +58,7 @@ void producer(ThreadSafeQueue& q)
         unique_lock<mutex> command_lock(command_mtx); // 锁住命令行输出互斥量
         q.put(i);
         cout << "producer: " << i << endl;
-        this_thread::sleep_for(std::chrono::milliseconds(100));
+        this_thread::sleep_for(std::chrono::milliseconds(1000));
     }
     
 }
@@ -71,7 +71,7 @@ void consumer(ThreadSafeQueue& q)
         unique_lock<mutex> command_lock(command_mtx); // 锁住命令行输出互斥量
         int value = q.get();
         cout << "consumer " << value << endl;
-        this_thread::sleep_for(std::chrono::milliseconds(200));
+        this_thread::sleep_for(std::chrono::milliseconds(2000));
     }
     
 }

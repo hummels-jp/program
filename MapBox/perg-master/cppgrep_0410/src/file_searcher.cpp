@@ -7,12 +7,12 @@
 
 // Constructor
 FileSearcher::FileSearcher(
-    const SearchOptions& opts,
-    ThreadSafeQueue<fs::path>& inputFileQueue,
-    ThreadSafeQueue<Result>& outputResultQueue,
-    std::atomic<int>& processedCounter,
-    std::atomic<int>& matchCounter,
-    std::mutex& consoleMutex)
+    const SearchOptions& opts, // Search options
+    ThreadSafeQueue<fs::path>& inputFileQueue, // Thread-safe queue for input files
+    ThreadSafeQueue<Result>& outputResultQueue, // Thread-safe queue for output results
+    std::atomic<int>& processedCounter, // Number of files processed
+    std::atomic<int>& matchCounter, // Number of matches found
+    std::mutex& consoleMutex) // Mutex for console output
     : options_(opts),
       file_queue_(inputFileQueue),
       result_queue_(outputResultQueue),
