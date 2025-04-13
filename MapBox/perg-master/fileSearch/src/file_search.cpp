@@ -53,7 +53,9 @@ bool FileSearch::search_file(const fs::path& file_path, std::vector<SearchResult
         }
 
         if (match) {
+            cout << "Found match in file: " << file_path << ", Line: " << line_number << std::endl;
             results.emplace_back(file_path, line_number, options_.isOutputOnlyMatch() ? matched_content : line);
+            
         }
     }
 

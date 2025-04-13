@@ -16,8 +16,8 @@
             "program": "${workspaceFolder}/bin/linux/fileSearch", // Path to executable (NO .exe for Linux)
             "args": [                      // Command line arguments as an array of strings
                 "${workspaceFolder}/test_dir/file1.txt",                   // Arg 1: Query
-                "-e",              // Arg 2: Directory (relative to cwd)
-                "hello"
+                "hello",              // Arg 2: Directory (relative to cwd)
+                "-i"
                 // Add other args like "-i", "world", "../test_dir" for different tests
             ],
             "stopAtEntry": false,          // false = run until breakpoint, true = stop at main()

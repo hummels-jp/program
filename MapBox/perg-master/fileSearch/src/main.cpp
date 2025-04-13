@@ -21,7 +21,7 @@ int main(int argc, char* argv[]) {
     std::mutex results_mutex;
 
     // Create a thread pool
-    ThreadPool thread_pool(std::thread::hardware_concurrency());
+    ThreadPool thread_pool(1);
 
     // Declare a vector to store futures
     std::vector<std::future<void>> futures;
