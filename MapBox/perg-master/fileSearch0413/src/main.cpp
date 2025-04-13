@@ -52,7 +52,8 @@ int main(int argc, char* argv[]) {
     SearchOption option(keyword, caseSensitive, invertMatch, showLineNumber, listOnly, countOnly, onlyMatch, useRegex);
 
     const size_t numThreads = std::thread::hardware_concurrency();
-    ThreadPool pool(numThreads);
+    // Create a thread pool with twice the number of available threads
+    ThreadPool pool(numThreads*2);
 
     SearchFile searchFile; // Create SearchFile object
     std::vector<fs::path> files;
