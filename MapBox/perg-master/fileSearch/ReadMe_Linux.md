@@ -1,7 +1,14 @@
 # fileSearch Tool Documentation (Linux Version)
 
+# build
+# make sure your system have gcc compiler and cmake
+# go to the ../build directory, run the command
+# cmake ..
+# make 
+
 # Usage:
 # Navigate to the bin directory
+# cd ../bin/linux
 # ./fileSearch <file_or_directory> [options]
 
 # Options:
