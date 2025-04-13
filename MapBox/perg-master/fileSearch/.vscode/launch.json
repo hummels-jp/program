@@ -13,11 +13,11 @@
             "name": "Debug fileSearch (GDB)", // Your name for this config
             "type": "cppdbg",              // Debugger type: gdb/lldb
             "request": "launch",           // Action: launch the program
-            "program": "${workspaceFolder}/bin/fileSearch.exe", // Path to executable (NO .exe for Linux)
+            "program": "${workspaceFolder}/bin/windows/fileSearch.exe", // Path to executable (NO .exe for Linux)
             "args": [                      // Command line arguments as an array of strings
                 "${workspaceFolder}/test_dir/file1.txt",                   // Arg 1: Query
-                "hello",              // Arg 2: Directory (relative to cwd)
-                "-i"
+                "-e",              // Arg 2: Directory (relative to cwd)
+                "hello"
                 // Add other args like "-i", "world", "../test_dir" for different tests
             ],
             "stopAtEntry": false,          // false = run until breakpoint, true = stop at main()
