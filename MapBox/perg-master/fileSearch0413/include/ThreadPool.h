@@ -8,31 +8,67 @@
 #include <condition_variable>
 #include <future>
 #include <functional>
+#include <atomic> // 引入原子类型支持
 
 class ThreadPool {
 public:
-    ThreadPool(size_t numThreads) {
+    // 获取 ThreadPool 单例实例
+    static ThreadPool& getInstance(size_t numThreads = std::thread::hardware_concurrency()) {
+        static ThreadPool instance(numThreads);
+        return instance;
+    }
+
+    // 禁止拷贝和赋值
+    ThreadPool(const ThreadPool&) = delete;
+    ThreadPool& operator=(const ThreadPool&) = delete;
+
+    template <typename F>
+    auto enqueue(F&& f) -> std::future<decltype(f())> {
+        auto task = std::make_shared<std::packaged_task<decltype(f())()>>(std::forward<F>(f));
+        std::future<decltype(f())> result = task->get_future();
+        {
+            std::unique_lock<std::mutex> lock(queueMutex);
+            if (stop.load()) { // 检查原子变量
+                throw std::runtime_error("enqueue on stopped ThreadPool");
+            }
+            tasks.emplace([task]() { (*task)(); });
+        }
+        condition.notify_one();
+        return result;
+    }
+
+    size_t getFreeThreadCount() const {
+        return free_thread_count.load();
+    }
+
+private:
+    // 私有构造函数
+    ThreadPool(size_t numThreads) : stop(false), free_thread_count(0) {
         for (size_t i = 0; i < numThreads; ++i) {
             workers.emplace_back([this]() {
                 while (true) {
                     std::packaged_task<void()> task;
                     {
                         std::unique_lock<std::mutex> lock(queueMutex);
-                        condition.wait(lock, [this]() { return stop || !tasks.empty(); });
-                        if (stop && tasks.empty()) return;
+                        condition.wait(lock, [this]() { return stop.load() || !tasks.empty(); });
+                        if (stop.load() && tasks.empty()) return;
+
                         task = std::move(tasks.front());
                         tasks.pop();
+                        --free_thread_count; // 减少闲置线程计数
                     }
                     task();
+                    ++free_thread_count; // 增加闲置线程计数
                 }
             });
+            ++free_thread_count; // 初始化时所有线程都为空闲状态
         }
     }
 
     ~ThreadPool() {
         {
             std::unique_lock<std::mutex> lock(queueMutex);
-            stop = true;
+            stop.store(true); // 设置原子变量为 true
         }
         condition.notify_all();
         for (std::thread &worker : workers) {
@@ -40,56 +76,12 @@ public:
         }
     }
 
-    template <typename F>
-    auto enqueue(F&& f) -> std::future<decltype(f())> {
-        // Return a future to the result of the task
-        // This allows the task to be run asynchronously
-        // and the result to be retrieved later
-        // ecltype (f()) is the return type of the function
-        // std::forward<F>(f) is used to perfectly forward the function
-        auto task = std::make_shared<std::packaged_task<decltype(f())()>>(std::forward<F>(f));
-        // std::packaged_task is a wrapper for a callable object
-        // std::future<decltype(f())> is the future object that will hold the result
-        // std::shared_ptr is used to share ownership of the task
-        // std::promise is used to set the value of the future
-        std::future<decltype(f())> result = task->get_future();
-        {
-            std::unique_lock<std::mutex> lock(queueMutex);
-            // Don't allow enqueueing after stopping the pool
-            if (stop) {
-                throw std::runtime_error("enqueue on stopped ThreadPool");
-            }
-            // Add the task to the queue
-            // std::packaged_task<void()> is a wrapper for a callable object
-            // std::function<void()> is a function that takes no arguments and returns void
-            // std::function is used to store the task
-            // std::queue is used to store the tasks
-            // std::mutex is used to protect the queue
-            // std::condition_variable is used to notify the worker threads
-            // std::unique_lock is used to lock the mutex
-            tasks.emplace([task]() { (*task)(); });
-        }
-        condition.notify_one();
-        return result;
-    }
-
-private:
-    std::vector<std::thread> workers; // Vector of worker threads
-    std::queue<std::packaged_task<void()>> tasks; // Queue of tasks
-    std::mutex queueMutex; // Mutex to protect the queue
-    std::condition_variable condition; // Condition variable to notify the worker threads
-    bool stop = false; //  Flag to indicate if the pool is stopped
-    // std::condition_variable is used to notify the worker threads
-    // std::mutex is used to protect the queue
-    // std::unique_lock is used to lock the mutex
-    // std::packaged_task is a wrapper for a callable object
-    // std::function is used to store the task
-    // std::queue is used to store the tasks
-    // std::thread is used to create the worker threads
-    // std::vector is used to store the worker threads
-    // std::future is used to retrieve the result of the task
-    // std::promise is used to set the value of the future
-
+    std::vector<std::thread> workers; // 工作线程
+    std::queue<std::packaged_task<void()>> tasks; // 任务队列
+    std::mutex queueMutex; // 队列互斥锁
+    std::condition_variable condition; // 条件变量
+    std::atomic_bool stop; // 使用原子类型的停止标志
+    std::atomic<size_t> free_thread_count; // 闲置线程计数
 };
 
 #endif // THREADPOOL_H
