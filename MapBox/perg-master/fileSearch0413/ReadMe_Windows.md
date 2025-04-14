@@ -21,18 +21,6 @@ cd ../bin/windows
                 Example:
                   .\fileSearch.exe ..\..\test_dir\file1.txt hello -i
 
-  -r            Enables regular expression matching.
-                Example:
-                  .\fileSearch.exe ..\..\test_dir\file1.txt "[a-zA-Z]+" -r
-
-  -E            Uses extended regular expressions (equivalent to egrep).
-                Example:
-                  .\fileSearch.exe ..\..\test_dir\file1.txt "hello|world" -E
-
-  -v            Inverts the match, displaying lines that do not match the specified patterns.
-                Example:
-                  .\fileSearch.exe ..\..\test_dir\file1.txt hello -v
-
   -n            Displays line numbers for matching lines.
                 Example:
                   .\fileSearch.exe ..\..\test_dir\file1.txt hello -n
@@ -41,10 +29,6 @@ cd ../bin/windows
                 Example:
                   .\fileSearch.exe ..\..\test_dir hello -l
 
-  -L            Lists only the names of files that do not contain matches.
-                Example:
-                  .\fileSearch.exe ..\..\test_dir hello -L
-
   -c            Displays the count of matching lines for each file.
                 Example:
                   .\fileSearch.exe ..\..\test_dir\file1.txt hello -c
@@ -52,6 +36,10 @@ cd ../bin/windows
   -o            Outputs only the matching part of the line.
                 Example:
                   .\fileSearch.exe ..\..\test_dir\file1.txt hello -o
+
+  -v            Inverts the match, displaying lines that do not match the specified patterns.
+                Example:
+                  .\fileSearch.exe ..\..\test_dir\file1.txt hello -v                  
 
 
 ## Notes

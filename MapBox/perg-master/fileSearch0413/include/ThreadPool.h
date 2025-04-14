@@ -8,17 +8,17 @@
 #include <condition_variable>
 #include <future>
 #include <functional>
-#include <atomic> // 引入原子类型支持
+#include <atomic> // Include atomic type support
 
 class ThreadPool {
 public:
-    // 获取 ThreadPool 单例实例
+    // Get the singleton instance of ThreadPool
     static ThreadPool& getInstance(size_t numThreads = std::thread::hardware_concurrency()) {
         static ThreadPool instance(numThreads);
         return instance;
     }
 
-    // 禁止拷贝和赋值
+    // Disable copy and assignment
     ThreadPool(const ThreadPool&) = delete;
     ThreadPool& operator=(const ThreadPool&) = delete;
 
@@ -28,7 +28,7 @@ public:
         std::future<decltype(f())> result = task->get_future();
         {
             std::unique_lock<std::mutex> lock(queueMutex);
-            if (stop.load()) { // 检查原子变量
+            if (stop.load()) { // Check atomic variable
                 throw std::runtime_error("enqueue on stopped ThreadPool");
             }
             tasks.emplace([task]() { (*task)(); });
@@ -42,7 +42,7 @@ public:
     }
 
 private:
-    // 私有构造函数
+    // Private constructor
     ThreadPool(size_t numThreads) : stop(false), free_thread_count(0) {
         for (size_t i = 0; i < numThreads; ++i) {
             workers.emplace_back([this]() {
@@ -55,20 +55,20 @@ private:
 
                         task = std::move(tasks.front());
                         tasks.pop();
-                        --free_thread_count; // 减少闲置线程计数
+                        --free_thread_count; // Decrease idle thread count
                     }
                     task();
-                    ++free_thread_count; // 增加闲置线程计数
+                    ++free_thread_count; // Increase idle thread count
                 }
             });
-            ++free_thread_count; // 初始化时所有线程都为空闲状态
+            ++free_thread_count; // All threads are idle at initialization
         }
     }
 
     ~ThreadPool() {
         {
             std::unique_lock<std::mutex> lock(queueMutex);
-            stop.store(true); // 设置原子变量为 true
+            stop.store(true); // Set atomic variable to true
         }
         condition.notify_all();
         for (std::thread &worker : workers) {
@@ -76,12 +76,12 @@ private:
         }
     }
 
-    std::vector<std::thread> workers; // 工作线程
-    std::queue<std::packaged_task<void()>> tasks; // 任务队列
-    std::mutex queueMutex; // 队列互斥锁
-    std::condition_variable condition; // 条件变量
-    std::atomic_bool stop; // 使用原子类型的停止标志
-    std::atomic<size_t> free_thread_count; // 闲置线程计数
+    std::vector<std::thread> workers; // Worker threads
+    std::queue<std::packaged_task<void()>> tasks; // Task queue
+    std::mutex queueMutex; // Queue mutex
+    std::condition_variable condition; // Condition variable
+    std::atomic_bool stop; // Atomic flag to indicate if the thread pool is stopped
+    std::atomic<size_t> free_thread_count; // Idle thread count
 };
 
 #endif // THREADPOOL_H

@@ -51,7 +51,7 @@ int main(int argc, char* argv[]) {
     // Create search options
     SearchOption option(keyword, caseSensitive, invertMatch, showLineNumber, listOnly, countOnly, onlyMatch, useRegex);
 
-    // 获取线程池单例实例
+    // Get the singleton instance of the thread pool
     ThreadPool& pool = ThreadPool::getInstance(std::thread::hardware_concurrency() * 2);
 
     SearchFile searchFile; // Create SearchFile object
