@@ -53,9 +53,6 @@ cd ../bin/windows
                 Example:
                   .\fileSearch.exe ..\..\test_dir\file1.txt hello -o
 
-  --color[=auto] Highlights matching keywords in the output. The auto option enables color only when the output is directed to a terminal.
-                Example:
-                  .\fileSearch.exe ..\..\test_dir\file1.txt hello --color
 
 ## Notes
 - Multiple options can be combined to refine the search.
