@@ -78,7 +78,7 @@ int main(int argc, char* argv[]) {
         // and pass them to the grepInFile method
         // 
         futures.emplace_back(pool.enqueue([&searchFile, file, &option]() {
-            return searchFile.grepInFile(file, option);
+            return searchFile.searchInFile(file, option);
         }));
     }
 
