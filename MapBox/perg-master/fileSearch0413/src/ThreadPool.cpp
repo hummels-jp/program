@@ -2,6 +2,8 @@
 #include <stdexcept>
 
 // Get the singleton instance of ThreadPool
+// hungry singleton pattern
+// This pattern ensures that the instance is created when it is first accessed, and it is thread-safe.
 ThreadPool& ThreadPool::getInstance(size_t numThreads) {
     static ThreadPool instance(numThreads);
     return instance;
