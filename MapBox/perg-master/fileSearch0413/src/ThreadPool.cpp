@@ -11,15 +11,19 @@ ThreadPool& ThreadPool::getInstance(size_t numThreads) {
 
 // Private constructor
 ThreadPool::ThreadPool(size_t numThreads) : stop(false), free_thread_count(0) {
-    for (size_t i = 0; i < numThreads; ++i) {
+    for (size_t i = 0; i < numThreads; ++i) 
+    {
         workers.emplace_back([this]() {
             while (true) {
                 std::packaged_task<void()> task;
                 {
+                    // get the task from the queue and 
                     std::unique_lock<std::mutex> lock(queueMutex);
+                    // Wait until there is a task or the pool is stopped
                     condition.wait(lock, [this]() { return stop.load() || !tasks.empty(); });
+                    // If the pool is stopped and there are no tasks, exit the thread
                     if (stop.load() && tasks.empty()) return;
-
+                    // If there are tasks, get the next task
                     task = std::move(tasks.front());
                     tasks.pop();
                     --free_thread_count; // Decrease idle thread count
