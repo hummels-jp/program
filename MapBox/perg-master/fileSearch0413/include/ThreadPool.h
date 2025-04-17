@@ -8,25 +8,25 @@
 #include <condition_variable>
 #include <future>
 #include <functional>
-#include <atomic> // Include atomic type support
+#include <atomic>
 
 class ThreadPool {
 public:
-    // Get the singleton instance of ThreadPool
+    // 获取单例实例
     static ThreadPool& getInstance(size_t numThreads = std::thread::hardware_concurrency());
 
-    // Disable copy and assignment
+    // 禁止拷贝和赋值
     ThreadPool(const ThreadPool&) = delete;
     ThreadPool& operator=(const ThreadPool&) = delete;
 
+    // 添加任务到线程池
     template <typename F>
-    auto enqueue(F&& f) -> std::future<decltype(f())>
-    {
+    auto enqueue(F&& f) -> std::future<decltype(f())> {
         auto task = std::make_shared<std::packaged_task<decltype(f())()>>(std::forward<F>(f));
         std::future<decltype(f())> result = task->get_future();
         {
             std::unique_lock<std::mutex> lock(queueMutex);
-            if (stop.load()) { // Check atomic variable
+            if (stop.load()) {
                 throw std::runtime_error("enqueue on stopped ThreadPool");
             }
             tasks.emplace([task]() { (*task)(); });
@@ -35,19 +35,26 @@ public:
         return result;
     }
 
+    // 获取空闲线程数量
     size_t getFreeThreadCount() const;
 
 private:
-    // Private constructor
-    ThreadPool(size_t numThreads);
+    // 私有构造函数和析构函数
+    explicit ThreadPool(size_t numThreads);
     ~ThreadPool();
 
-    std::vector<std::thread> workers; // Worker threads
-    std::queue<std::packaged_task<void()>> tasks; // Task queue
-    std::mutex queueMutex; // Queue mutex
-    std::condition_variable condition; // Condition variable
-    std::atomic_bool stop; // Atomic flag to indicate if the thread pool is stopped
-    std::atomic<size_t> free_thread_count; // Idle thread count
+    // 静态变量
+    static ThreadPool* instance;
+    static std::mutex instanceMutex;
+
+    // 线程池相关成员
+    std::vector<std::thread> workers;
+    std::queue<std::packaged_task<void()>> tasks;
+
+    std::mutex queueMutex;
+    std::condition_variable condition;
+    std::atomic<bool> stop;
+    std::atomic<size_t> free_thread_count;
 };
 
 #endif // THREADPOOL_H

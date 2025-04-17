@@ -1,54 +1,60 @@
 #include "ThreadPool.h"
 #include <stdexcept>
+#include <mutex>
+#include <atomic>
 
-// Get the singleton instance of ThreadPool
-// hungry singleton pattern
-// This pattern ensures that the instance is created when it is first accessed, and it is thread-safe.
+// 静态变量初始化
+ThreadPool* ThreadPool::instance = nullptr;
+std::mutex ThreadPool::instanceMutex;
+
+// 获取单例实例（双重检查锁实现）
 ThreadPool& ThreadPool::getInstance(size_t numThreads) {
-    static ThreadPool instance(numThreads);
-    return instance;
+    if (!instance) {
+        std::lock_guard<std::mutex> lock(instanceMutex);
+        if (!instance) {
+            instance = new ThreadPool(numThreads);
+        }
+    }
+    return *instance;
 }
 
-// Private constructor
+// 私有构造函数
 ThreadPool::ThreadPool(size_t numThreads) : stop(false), free_thread_count(0) {
-    for (size_t i = 0; i < numThreads; ++i) 
-    {
+    for (size_t i = 0; i < numThreads; ++i) {
         workers.emplace_back([this]() {
             while (true) {
                 std::packaged_task<void()> task;
                 {
-                    // get the task from the queue and 
                     std::unique_lock<std::mutex> lock(queueMutex);
-                    // Wait until there is a task or the pool is stopped
                     condition.wait(lock, [this]() { return stop.load() || !tasks.empty(); });
-                    // If the pool is stopped and there are no tasks, exit the thread
                     if (stop.load() && tasks.empty()) return;
-                    // If there are tasks, get the next task
                     task = std::move(tasks.front());
                     tasks.pop();
-                    --free_thread_count; // Decrease idle thread count
+                    --free_thread_count;
                 }
                 task();
-                ++free_thread_count; // Increase idle thread count
+                ++free_thread_count;
             }
         });
-        ++free_thread_count; // All threads are idle at initialization
+        ++free_thread_count;
     }
 }
 
-// Destructor
+// 析构函数
 ThreadPool::~ThreadPool() {
     {
         std::unique_lock<std::mutex> lock(queueMutex);
-        stop.store(true); // Set atomic variable to true
+        stop.store(true);
     }
     condition.notify_all();
     for (std::thread& worker : workers) {
         worker.join();
     }
+    delete instance; // 释放单例实例
+    instance = nullptr;
 }
 
-// Get the count of free threads
+// 获取空闲线程数量
 size_t ThreadPool::getFreeThreadCount() const {
     return free_thread_count.load();
 }
