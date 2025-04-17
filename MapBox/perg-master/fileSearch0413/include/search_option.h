@@ -6,8 +6,38 @@
 class SearchOption {
 public:
     // Constructor
-    SearchOption(const std::string& keyword, bool case_sensitive = true, bool invert_match = false, bool show_line_number = false, bool list_only = false, bool count_only = false, bool only_match = false, bool use_regex = false)
-        : keyword(keyword), case_sensitive(case_sensitive), invert_match(invert_match), show_line_number(show_line_number), list_only(list_only), count_only(count_only), only_match(only_match), use_regex(use_regex) {}
+    // Parameters:
+    // - keyword: The keyword to search for.
+    // - case_sensitive: If true, the search is case-sensitive. Default is true.
+    // - invert_match: If true, matches are inverted (non-matching lines are shown). Default is false.
+    // - show_line_number: If true, line numbers are displayed with matches. Default is false.
+    // - list_only: If true, only file names containing matches are listed. Default is false.
+    // - count_only: If true, only the count of matching lines is displayed. Default is false.
+    // - only_match: If true, only the matched strings are displayed. Default is false.
+    // - use_regex: If true, the keyword is treated as a regular expression. Default is false.
+    SearchOption(const std::string& keyword, 
+                 bool case_sensitive = true, 
+                 bool invert_match = false, 
+                 bool show_line_number = false, 
+                 bool list_only = false, 
+                 bool count_only = false, 
+                 bool only_match = false, 
+                 bool use_regex = false)
+        : keyword(keyword), 
+          case_sensitive(case_sensitive), 
+          invert_match(invert_match), 
+          show_line_number(show_line_number), 
+          list_only(list_only), 
+          count_only(count_only), 
+          only_match(only_match), 
+          use_regex(use_regex) {}
+          case_sensitive(case_sensitive),
+          invert_match(invert_match),
+          show_line_number(show_line_number),
+          list_only(list_only),
+          count_only(count_only),
+          only_match(only_match),
+          use_regex(use_regex) {}
 
     // Get the keyword
     const std::string& getKeyword() const {
