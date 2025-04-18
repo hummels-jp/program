@@ -12,14 +12,14 @@
 
 class ThreadPool {
 public:
-    // 获取单例实例
+    // Get the singleton instance
     static ThreadPool& getInstance(size_t numThreads = std::thread::hardware_concurrency());
 
-    // 禁止拷贝和赋值
+    // Disable copy and assignment
     ThreadPool(const ThreadPool&) = delete;
     ThreadPool& operator=(const ThreadPool&) = delete;
 
-    // 添加任务到线程池
+    // Add a task to the thread pool
     template <typename F>
     auto enqueue(F&& f) -> std::future<decltype(f())> {
         auto task = std::make_shared<std::packaged_task<decltype(f())()>>(std::forward<F>(f));
@@ -35,19 +35,19 @@ public:
         return result;
     }
 
-    // 获取空闲线程数量
+    // Get the number of free threads
     size_t getFreeThreadCount() const;
 
 private:
-    // 私有构造函数和析构函数
+    // Private constructor and destructor
     explicit ThreadPool(size_t numThreads);
     ~ThreadPool();
 
-    // 静态变量
-    static ThreadPool* instance;
+    // Static variables
+    static std::atomic<ThreadPool*> instance; // Use atomic for thread safety
     static std::mutex instanceMutex;
 
-    // 线程池相关成员
+    // Thread pool members
     std::vector<std::thread> workers;
     std::queue<std::packaged_task<void()>> tasks;
 

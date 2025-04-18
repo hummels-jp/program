@@ -1,0 +1,25 @@
+@startuml
+title Simple Factory Design Pattern
+
+interface Product {
+    + use() : void
+}
+
+class ConcreteProductA {
+    + use() : void
+}
+
+class ConcreteProductB {
+    + use() : void
+}
+
+Product <|-- ConcreteProductA
+Product <|-- ConcreteProductB
+
+class SimpleFactory {
+    + createProduct(type: std::string) : Product
+}
+
+SimpleFactory ..> Product : "creates"
+
+@enduml

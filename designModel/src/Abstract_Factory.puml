@@ -1,0 +1,53 @@
+@startuml
+title Abstract Factory Design Pattern
+
+interface AbstractProductA {
+    + use() : void
+}
+
+interface AbstractProductB {
+    + use() : void
+}
+
+class ConcreteProductA1 {
+    + use() : void
+}
+
+class ConcreteProductA2 {
+    + use() : void
+}
+
+class ConcreteProductB1 {
+    + use() : void
+}
+
+class ConcreteProductB2 {
+    + use() : void
+}
+
+AbstractProductA <|-- ConcreteProductA1
+AbstractProductA <|-- ConcreteProductA2
+AbstractProductB <|-- ConcreteProductB1
+AbstractProductB <|-- ConcreteProductB2
+
+interface AbstractFactory {
+    + createProductA() : AbstractProductA
+    + createProductB() : AbstractProductB
+}
+
+class ConcreteFactory1 {
+    + createProductA() : AbstractProductA
+    + createProductB() : AbstractProductB
+}
+
+class ConcreteFactory2 {
+    + createProductA() : AbstractProductA
+    + createProductB() : AbstractProductB
+}
+
+AbstractFactory <|-- ConcreteFactory1
+AbstractFactory <|-- ConcreteFactory2
+AbstractFactory o-- AbstractProductA
+AbstractFactory o-- AbstractProductB
+
+@enduml

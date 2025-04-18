@@ -3,22 +3,32 @@
 #include <mutex>
 #include <atomic>
 
-// 静态变量初始化
-ThreadPool* ThreadPool::instance = nullptr;
+// Static variable initialization
+std::atomic<ThreadPool*> ThreadPool::instance{nullptr};
 std::mutex ThreadPool::instanceMutex;
 
-// 获取单例实例（双重检查锁实现）
+// Get the singleton instance (double-checked locking with atomic)
 ThreadPool& ThreadPool::getInstance(size_t numThreads) {
-    if (!instance) {
+    ThreadPool* tempInstance = instance.load(std::memory_order_acquire);
+    if (!tempInstance) {
         std::lock_guard<std::mutex> lock(instanceMutex);
-        if (!instance) {
-            instance = new ThreadPool(numThreads);
+        tempInstance = instance.load(std::memory_order_relaxed);
+        if (!tempInstance) {
+            tempInstance = new ThreadPool(numThreads);
+            instance.store(tempInstance, std::memory_order_release);
         }
     }
-    return *instance;
+    return *tempInstance;
+
+    // use static local variable for thread-safe singleton initialization
+    // static local variable is initialized only once and is thread-safe in C++11 and later
+    // static ThreadPool instance(numThreads);
+    // return instance;
+    // Note: The above line is commented out to avoid static initialization order issues.
+    // The double-checked locking pattern is used to ensure that the instance is created only once
 }
 
-// 私有构造函数
+// Private constructor
 ThreadPool::ThreadPool(size_t numThreads) : stop(false), free_thread_count(0) {
     for (size_t i = 0; i < numThreads; ++i) {
         workers.emplace_back([this]() {
@@ -40,7 +50,7 @@ ThreadPool::ThreadPool(size_t numThreads) : stop(false), free_thread_count(0) {
     }
 }
 
-// 析构函数
+// Destructor
 ThreadPool::~ThreadPool() {
     {
         std::unique_lock<std::mutex> lock(queueMutex);
@@ -50,11 +60,11 @@ ThreadPool::~ThreadPool() {
     for (std::thread& worker : workers) {
         worker.join();
     }
-    delete instance; // 释放单例实例
-    instance = nullptr;
+    ThreadPool* tempInstance = instance.exchange(nullptr, std::memory_order_acq_rel);
+    delete tempInstance; // Free the singleton instance
 }
 
-// 获取空闲线程数量
+// Get the number of free threads
 size_t ThreadPool::getFreeThreadCount() const {
     return free_thread_count.load();
 }
