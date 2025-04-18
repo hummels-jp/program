@@ -1,0 +1,36 @@
+@startuml
+title Decorator Design Pattern
+
+interface Beverage {
+    + getDescription() : string
+    + cost() : double
+}
+
+class Coffee {
+    + getDescription() : string
+    + cost() : double
+}
+
+abstract class BeverageDecorator {
+    + getDescription() : string
+    + cost() : double
+    # beverage : Beverage
+}
+
+class SugarDecorator {
+    + getDescription() : string
+    + cost() : double
+}
+
+class MilkDecorator {
+    + getDescription() : string
+    + cost() : double
+}
+
+Beverage <|.. Coffee
+Beverage <|.. BeverageDecorator
+BeverageDecorator <|-- SugarDecorator
+BeverageDecorator <|-- MilkDecorator
+BeverageDecorator o-- Beverage
+
+@enduml

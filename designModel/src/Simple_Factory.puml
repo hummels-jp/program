@@ -1,0 +1,32 @@
+@startuml
+title Simple Factory Design Pattern
+
+enum ProductType {
+    ProductA
+    ProductB
+    Unknown
+}
+
+interface Product {
+    + use() : void
+}
+
+class ConcreteProductA {
+    + use() : void
+}
+
+class ConcreteProductB {
+    + use() : void
+}
+
+Product <|-- ConcreteProductA
+Product <|-- ConcreteProductB
+
+class SimpleFactory {
+    + createProduct(type: ProductType) : Product
+}
+
+SimpleFactory ..> Product : "creates"
+SimpleFactory ..> ProductType
+
+@enduml

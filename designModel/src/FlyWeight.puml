@@ -1,0 +1,18 @@
+@startuml
+title Flyweight Design Pattern
+
+class Font {
+    - fontName : string
+    + Font(name : string)
+    + display(text : string) : void
+    + getFontName() : string
+}
+
+class FontPool {
+    - fontPool : Map<string, Font>
+    + getFont(fontName : string) : Font
+}
+
+FontPool o-- Font
+
+@enduml
