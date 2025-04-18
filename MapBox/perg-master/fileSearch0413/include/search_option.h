@@ -31,13 +31,6 @@ public:
           count_only(count_only), 
           only_match(only_match), 
           use_regex(use_regex) {}
-          case_sensitive(case_sensitive),
-          invert_match(invert_match),
-          show_line_number(show_line_number),
-          list_only(list_only),
-          count_only(count_only),
-          only_match(only_match),
-          use_regex(use_regex) {}
 
     // Get the keyword
     const std::string& getKeyword() const {
