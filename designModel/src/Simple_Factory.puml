@@ -1,6 +1,12 @@
 @startuml
 title Simple Factory Design Pattern
 
+enum ProductType {
+    ProductA
+    ProductB
+    Unknown
+}
+
 interface Product {
     + use() : void
 }
@@ -17,9 +23,10 @@ Product <|-- ConcreteProductA
 Product <|-- ConcreteProductB
 
 class SimpleFactory {
-    + createProduct(type: std::string) : Product
+    + createProduct(type: ProductType) : Product
 }
 
 SimpleFactory ..> Product : "creates"
+SimpleFactory ..> ProductType
 
 @enduml

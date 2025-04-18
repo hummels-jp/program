@@ -1,0 +1,36 @@
+@startuml
+title Bridge Design Pattern
+
+interface Color {
+    + getColor() : string
+}
+
+class Red {
+    + getColor() : string
+}
+
+class Blue {
+    + getColor() : string
+}
+
+Color <|.. Red
+Color <|.. Blue
+
+abstract class Shape {
+    + draw() : void
+    # color : Color
+}
+
+class Circle {
+    + draw() : void
+}
+
+class Rectangle {
+    + draw() : void
+}
+
+Shape <|-- Circle
+Shape <|-- Rectangle
+Shape o-- Color
+
+@enduml

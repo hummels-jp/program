@@ -1,0 +1,42 @@
+@startuml
+title Observer Design Pattern
+
+interface Observer {
+    + update(weather: string) : void
+}
+
+class TV {
+    + update(weather: string) : void
+}
+
+class Radio {
+    + update(weather: string) : void
+}
+
+class Newspaper {
+    + update(weather: string) : void
+}
+
+Observer <|.. TV
+Observer <|.. Radio
+Observer <|.. Newspaper
+
+interface Subject {
+    + attach(observer: Observer) : void
+    + detach(observer: Observer) : void
+    + notify() : void
+}
+
+class Weather {
+    - observers : List<Observer>
+    - currentWeather : string
+    + setWeather(weather: string) : void
+    + attach(observer: Observer) : void
+    + detach(observer: Observer) : void
+    + notify() : void
+}
+
+Subject <|.. Weather
+Weather o-- Observer
+
+@enduml
