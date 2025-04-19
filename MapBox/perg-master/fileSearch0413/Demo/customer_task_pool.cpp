@@ -11,19 +11,7 @@ class ThreadPool {
 public:
     explicit ThreadPool(size_t numThreads) {
         for (size_t i = 0; i < numThreads; ++i) {
-            workers.emplace_back([this]() {
-                while (true) {
-                    std::function<void()> task;
-                    {
-                        std::unique_lock<std::mutex> lock(queueMutex);
-                        condition.wait(lock, [this]() { return stop || !tasks.empty(); });
-                        if (stop && tasks.empty()) return;
-                        task = std::move(tasks.front());
-                        tasks.pop();
-                    }
-                    task(); // Execute the task
-                }
-            });
+            workers.emplace_back(&ThreadPool::worker, this); // Bind worker function
         }
     }
 
@@ -40,12 +28,8 @@ public:
 
     template <typename F, typename... Args>
     auto enqueue(F&& f, Args&&... args) -> std::future<typename std::invoke_result<F, Args...>::type> {
-        // define the return type of the function
         using returnType = typename std::invoke_result<F, Args...>::type;
 
-        // wrap the function and its arguments in a promise
-        // and store it in a shared pointer to ensure it lives long enough
-        // until the task is executed
         auto promise = std::make_shared<std::promise<returnType>>();
         std::future<returnType> result = promise->get_future();
 
@@ -55,14 +39,10 @@ public:
 
             tasks.emplace([promise, f = std::forward<F>(f), ...args = std::forward<Args>(args)]() mutable {
                 try {
-                    // if the function returns void, we need to handle it differently
-                    // since we can't set a value on the promise in that case
                     if constexpr (std::is_void_v<returnType>) {
                         std::invoke(std::forward<F>(f), std::forward<Args>(args)...);
                         promise->set_value();
                     } else {
-                        // otherwise, we can set the value directly
-                        // on the promise using the result of the function call
                         promise->set_value(std::invoke(std::forward<F>(f), std::forward<Args>(args)...));
                     }
                 } catch (...) {
@@ -75,6 +55,20 @@ public:
     }
 
 private:
+    void worker() {
+        while (true) {
+            std::function<void()> task;
+            {
+                std::unique_lock<std::mutex> lock(queueMutex);
+                condition.wait(lock, [this]() { return stop || !tasks.empty(); });
+                if (stop && tasks.empty()) return;
+                task = std::move(tasks.front());
+                tasks.pop();
+            }
+            task(); // Execute the task
+        }
+    }
+
     std::vector<std::thread> workers;
     std::queue<std::function<void()>> tasks;
     std::mutex queueMutex;
