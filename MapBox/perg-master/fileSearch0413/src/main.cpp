@@ -76,7 +76,7 @@ int main(int argc, char* argv[]) {
     for (const auto& file : files) {
         // Use a lambda function to capture the file and option
         // and pass them to the grepInFile method
-        // 
+        // task function is searchFile.searchInFile(file, option)
         futures.emplace_back(pool.enqueue([&searchFile, file, &option]() {
             return searchFile.searchInFile(file, option);
         }));

@@ -22,6 +22,10 @@ public:
     // Add a task to the thread pool
     template <typename F>
     auto enqueue(F&& f) -> std::future<decltype(f())> {
+        // Check if the task is callable
+        // decltype(f())()> is used to deduce the return type of the function
+        // std::forward<F>(f) is used to perfectly forward the function
+        // to preserve its value category (lvalue/rvalue)
         auto task = std::make_shared<std::packaged_task<decltype(f())()>>(std::forward<F>(f));
         std::future<decltype(f())> result = task->get_future();
         {
