@@ -40,7 +40,9 @@ ThreadPool::ThreadPool(size_t numThreads) : stop(false), free_thread_count(0) {
                 std::packaged_task<void()> task;
                 {
                     std::unique_lock<std::mutex> lock(queueMutex);
+                    // Wait until there are tasks or the pool is stopped
                     condition.wait(lock, [this]() { return stop.load() || !tasks.empty(); });
+                    // If the pool is stopped and there are no tasks, exit the thread
                     if (stop.load() && tasks.empty()) return;
                     
                     // get the task from the queue
