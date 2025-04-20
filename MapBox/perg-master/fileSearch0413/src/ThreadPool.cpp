@@ -19,42 +19,34 @@ ThreadPool& ThreadPool::getInstance(size_t numThreads) {
         }
     }
     return *tempInstance;
-
-    // use static local variable for thread-safe singleton initialization
-    // static local variable is initialized only once and is thread-safe in C++11 and later
-    // static ThreadPool instance(numThreads);
-    // return instance;
-    // Note: The above line is commented out to avoid static initialization order issues.
-    // The double-checked locking pattern is used to ensure that the instance is created only once
-
-    
 }
 
 // Private constructor
 ThreadPool::ThreadPool(size_t numThreads) : stop(false), free_thread_count(0) {
     for (size_t i = 0; i < numThreads; ++i) {
-        workers.emplace_back([this]() {
-            while (true) {
-                // Wait for tasks to be available or stop signal 
-                // define a task variable to hold the task, return type if void, parameter is empty
-                std::packaged_task<void()> task;
-                {
-                    std::unique_lock<std::mutex> lock(queueMutex);
-                    // Wait until there are tasks or the pool is stopped
-                    condition.wait(lock, [this]() { return stop.load() || !tasks.empty(); });
-                    // If the pool is stopped and there are no tasks, exit the thread
-                    if (stop.load() && tasks.empty()) return;
-                    
-                    // get the task from the queue
-                    task = std::move(tasks.front());
-                    tasks.pop();
-                    --free_thread_count;
-                }
-                // Execute the task
-                task();
-                ++free_thread_count;
-            }
-        });
+        workers.emplace_back(&ThreadPool::worker, this); // Bind worker function
+        ++free_thread_count;
+    }
+}
+
+// Worker function (extracted from lambda)
+void ThreadPool::worker() {
+    while (true) {
+        std::packaged_task<void()> task;
+        {
+            std::unique_lock<std::mutex> lock(queueMutex);
+            // Wait until there are tasks or the pool is stopped
+            condition.wait(lock, [this]() { return stop.load() || !tasks.empty(); });
+            // If the pool is stopped and there are no tasks, exit the thread
+            if (stop.load() && tasks.empty()) return;
+
+            // Get the task from the queue
+            task = std::move(tasks.front());
+            tasks.pop();
+            --free_thread_count;
+        }
+        // Execute the task
+        task();
         ++free_thread_count;
     }
 }

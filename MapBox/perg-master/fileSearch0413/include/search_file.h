@@ -20,9 +20,6 @@ public:
     // 在文件中搜索关键字并返回匹配结果
     std::vector<SearchResult> searchInFile(const fs::path& filePath, const SearchOption& option);
 
-    // 在多个文件中搜索关键字
-    std::vector<SearchResult> grepInFiles(const std::vector<fs::path>& files, const SearchOption& option);
-
 private:
     // 辅助函数：检查是否匹配条件
     bool matchesCondition(bool keyword_found, bool invert_match) const;

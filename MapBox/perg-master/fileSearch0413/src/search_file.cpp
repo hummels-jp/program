@@ -2,6 +2,7 @@
 #include <fstream>
 #include <algorithm>
 #include <iostream>
+#include <memory> // For std::unique_ptr
 
 // Recursively find all files in the directory
 std::vector<fs::path> SearchFile::findFiles(const fs::path& directory) {
@@ -33,10 +34,12 @@ std::vector<SearchResult> SearchFile::searchInFile(const fs::path& filePath, con
     };
 
     std::vector<SearchResult> results;
-    std::ifstream file(filePath);
+
+    // Use unique_ptr to manage the file stream
+    auto file = std::make_unique<std::ifstream>(filePath);
 
     // Check if the file was successfully opened
-    if (!file.is_open()) {
+    if (!file->is_open()) {
         std::cerr << "Error: Unable to open file: " << filePath << std::endl;
         return results;
     }
@@ -50,7 +53,7 @@ std::vector<SearchResult> SearchFile::searchInFile(const fs::path& filePath, con
         std::transform(search_keyword.begin(), search_keyword.end(), search_keyword.begin(), ::tolower);
     }
 
-    while (std::getline(file, line)) {
+    while (std::getline(*file, line)) {
         ++line_number;
         std::string search_line = line;
 
@@ -68,6 +71,6 @@ std::vector<SearchResult> SearchFile::searchInFile(const fs::path& filePath, con
         }
     }
 
-    file.close();
+    // No need to explicitly close the file; unique_ptr will handle it
     return results;
 }
