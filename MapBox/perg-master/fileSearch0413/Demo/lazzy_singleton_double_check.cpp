@@ -12,8 +12,14 @@ public:
             std::lock_guard<std::mutex> lock(instanceMutex);
             // Second check (with locking)
             tempInstance = instance.load(std::memory_order_relaxed);
+
+            // cpu memory barrier to ensure the constructor is complete before storing the pointer
+            std::atomic_thread_fence(std::memory_order_acquire); // Ensure the constructor is complete before storing the pointer
             if (!tempInstance) {
                 tempInstance = new LazySingleton();
+        
+                // std::atomic_thread_fence(std::memory_order_release); // Ensure the constructor is complete before storing the pointer
+                std::atomic_thread_fence(std::memory_order_release);
                 instance.store(tempInstance, std::memory_order_release);
             }
         }

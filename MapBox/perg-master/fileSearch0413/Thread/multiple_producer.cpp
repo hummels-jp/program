@@ -44,6 +44,7 @@ private:
 };
 
 // 生产者线程函数
+// 
 void producer(SafeQueue<int>& producer_queue, int id, int count) {
     for (int i = 0; i < count; ++i) {
         int msg = id * 100 + i;
@@ -76,6 +77,8 @@ int main() {
     const int producer_count = 3;
     const int consumer_count = 2;
     const int produce_per_producer = 5;
+    // 每个生产者生产的总数除以消费者数量，确保每个消费者都能消费到数据
+    // 这里假设每个生产者生产的数量是相同的
     const int total_produce = producer_count * produce_per_producer / consumer_count;
 
     // 启动生产者线程
