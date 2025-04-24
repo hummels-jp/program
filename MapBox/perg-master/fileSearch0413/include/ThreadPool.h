@@ -19,11 +19,17 @@ public:
     ThreadPool(const ThreadPool&) = delete;
     ThreadPool& operator=(const ThreadPool&) = delete;
 
-    // Add a task to the thread pool
-    template <typename F>
-    auto enqueue(F&& f) -> std::future<decltype(f())> {
-        auto task = std::make_shared<std::packaged_task<decltype(f())()>>(std::forward<F>(f));
-        std::future<decltype(f())> result = task->get_future();
+    // Add a task to the thread pool with variadic arguments
+    template <typename F, typename... Args>
+    auto enqueue(F&& f, Args&&... args) -> std::future<decltype(f(args...))> {
+        using ReturnType = decltype(f(args...));
+
+        // Create a packaged task with bound arguments
+        auto task = std::make_shared<std::packaged_task<ReturnType()>>(
+            std::bind(std::forward<F>(f), std::forward<Args>(args)...)
+        );
+
+        std::future<ReturnType> result = task->get_future();
         {
             std::unique_lock<std::mutex> lock(queueMutex);
             if (stop.load()) {
