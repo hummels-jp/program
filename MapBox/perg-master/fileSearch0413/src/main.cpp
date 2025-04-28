@@ -86,31 +86,31 @@ int main(int argc, char* argv[]) {
     // block until all futures are ready
     // and collect the results into a single vector
     // the first file is very big, the main thread will wait for it to finish,
-    std::vector<SearchResult> allResults;
-    for (auto& future : futures) {
-        auto search_results = future.get();
-        allResults.insert(allResults.end(), search_results.begin(), search_results.end());
-    }
+    // std::vector<SearchResult> allResults;
+    // for (auto& future : futures) {
+    //     auto search_results = future.get();
+    //     allResults.insert(allResults.end(), search_results.begin(), search_results.end());
+    // }
 
     // While there are still unfinished futures， loop until all futures are ready
-// while (!futures.empty()) {
-//     for (auto it = futures.begin(); it != futures.end();) {
-//         // Check if the future is ready
-//         if (it->wait_for(std::chrono::milliseconds(0)) == std::future_status::ready) {
-//             // Get the result and add it to allResults
-//             auto search_results = it->get();
-//             allResults.insert(allResults.end(), search_results.begin(), search_results.end());
+while (!futures.empty()) {
+    for (auto it = futures.begin(); it != futures.end();) {
+        // Check if the future is ready
+        if (it->wait_for(std::chrono::milliseconds(0)) == std::future_status::ready) {
+            // Get the result and add it to allResults
+            auto search_results = it->get();
+            allResults.insert(allResults.end(), search_results.begin(), search_results.end());
 
-//             // Remove the completed future from the list
-//             it = futures.erase(it);
-//         } else {
-//             ++it; // Move to the next future
-//         }
-//     }
+            // Remove the completed future from the list
+            it = futures.erase(it);
+        } else {
+            ++it; // Move to the next future
+        }
+    }
 
-//     // Optionally, sleep for a short duration to reduce CPU usage
-//     std::this_thread::sleep_for(std::chrono::milliseconds(10));
-// }
+    // Optionally, sleep for a short duration to reduce CPU usage
+    std::this_thread::sleep_for(std::chrono::milliseconds(10));
+}
 
     // Output matching results
     for (const auto& result : allResults) {
