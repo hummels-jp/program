@@ -1,14 +1,22 @@
 #include <iostream>
 #include <vector>
+#include <cstring>
 using namespace std;
 
 template <typename T>
 bool compare(const T& a, const T& b) {
     cout << "Comparing values of type: " << typeid(T).name() << std::endl;
+    cout << "compare(const T& a, const T& b) initialized" << std::endl;
     return a < b;
 }
 
+// Specialization for const char* type
+template <>
+bool compare(const char* const& a, const char* const& b) {
 
+    cout << "compare(const char* const& a, const char* const& b) initialized" << std::endl;
+    return strcmp(a, b) < 0;
+}
 
 int main() {
     int a = 5, b = 10;
@@ -25,7 +33,8 @@ int main() {
         std::cout << x << " is not less than " << y << std::endl;
     }
 
-    string str1 = "apple", str2 = "banana";
+    const char* str1 = "apple";
+    const char* str2 = "banana";
     if (compare(str1, str2)) {
         std::cout << str1 << " is less than " << str2 << std::endl;
     } else {
