@@ -35,5 +35,8 @@ int main() {
     // *p3 = 50;    // Error: *p3 is low-level const
     // p3 = &a;     // Error: p3 is top-level const
 
+    const int x = 10; // top-level const
+    const int*p1 = &x; // low-level const
+
     return 0;
 }
