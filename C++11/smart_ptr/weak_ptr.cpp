@@ -1,28 +1,39 @@
 #include <iostream>
 #include <memory>
 
-struct B; // 前向声明
-
-struct A {
-    std::shared_ptr<B> bptr;
-    ~A() { std::cout << "A 析构\n"; }
-};
-
-struct B {
-    std::weak_ptr<A> aptr; // 使用 weak_ptr 避免循环引用
-    ~B() { std::cout << "B 析构\n"; }
-};
-
-void weak_ptr_demo() {
-    auto a = std::make_shared<A>();
-    auto b = std::make_shared<B>();
-    a->bptr = b;
-    b->aptr = a;
-    // 现在不会内存泄漏，A 和 B 的析构函数会被调用
-}
-
 int main() {
-    weak_ptr_demo();
-    std::cout << "main 结束\n";
+    // 创建一个 shared_ptr
+    std::shared_ptr<int> sharedPtr = std::make_shared<int>(42);
+
+    // 使用 shared_ptr 初始化 weak_ptr
+    std::weak_ptr<int> weakPtr(sharedPtr);
+
+    // 检查 weak_ptr 是否有效
+    if (auto lockedPtr = weakPtr.lock()) { // 尝试锁定 weak_ptr
+        std::cout << "weak_ptr 有效，值为: " << *lockedPtr << std::endl;
+    } else {
+        std::cout << "weak_ptr 无效" << std::endl;
+    }
+
+    // 重置 shared_ptr
+    // sharedPtr.reset();
+
+    // 通过 lock 获得 shared_ptr
+    std::shared_ptr<int> newSharedPtr = weakPtr.lock();
+    if (newSharedPtr) {
+        std::cout << "通过 lock 获得 shared_ptr，值为: " << *newSharedPtr << std::endl;
+    } else {
+        std::cout << "无法通过 lock 获得 shared_ptr" << std::endl;
+    }
+
+    std::cout << weakPtr.use_count() << std::endl; // weak_ptr 的引用计数为 1
+
+    // 再次检查 weak_ptr 是否有效
+    if (auto lockedPtr = weakPtr.lock()) {
+        std::cout << "weak_ptr 有效，值为: " << *lockedPtr << std::endl;
+    } else {
+        std::cout << "weak_ptr 无效" << std::endl;
+    }
+
     return 0;
 }
