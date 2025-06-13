@@ -1,0 +1,31 @@
+@startuml
+title Facade Design Pattern
+
+class Projector {
+    + on() : void
+    + off() : void
+    + setInput(input : string) : void
+}
+
+class SoundSystem {
+    + on() : void
+    + off() : void
+    + setVolume(level : int) : void
+}
+
+class BluRayPlayer {
+    + on() : void
+    + off() : void
+    + play(movie : string) : void
+}
+
+class HomeTheaterFacade {
+    + watchMovie(movie : string) : void
+    + endMovie() : void
+}
+
+HomeTheaterFacade o-- Projector
+HomeTheaterFacade o-- SoundSystem
+HomeTheaterFacade o-- BluRayPlayer
+
+@enduml

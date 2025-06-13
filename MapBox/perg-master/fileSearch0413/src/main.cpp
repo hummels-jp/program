@@ -68,21 +68,49 @@ int main(int argc, char* argv[]) {
     }
 
     // Perform grep operations asynchronously
+    // Create a vector to store futures for each file
+    // This allows us to run grepInFile in parallel
+    // and collect results later
+
     std::vector<std::future<std::vector<SearchResult>>> futures;
     for (const auto& file : files) {
         // Use a lambda function to capture the file and option
         // and pass them to the grepInFile method
+        // task function is searchFile.searchInFile(file, option)
         futures.emplace_back(pool.enqueue([&searchFile, file, &option]() {
-            return searchFile.grepInFile(file, option);
+            return searchFile.searchInFile(file, option);
         }));
     }
 
     // Store all matching results
-    std::vector<SearchResult> allResults;
-    for (auto& future : futures) {
-        auto search_results = future.get();
-        allResults.insert(allResults.end(), search_results.begin(), search_results.end());
+    // block until all futures are ready
+    // and collect the results into a single vector
+    // the first file is very big, the main thread will wait for it to finish,
+    // std::vector<SearchResult> allResults;
+    // for (auto& future : futures) {
+    //     auto search_results = future.get();
+    //     allResults.insert(allResults.end(), search_results.begin(), search_results.end());
+    // }
+
+    // While there are still unfinished futures， loop until all futures are ready
+while (!futures.empty()) {
+    for (auto it = futures.begin(); it != futures.end();) {
+        // Check if the future is ready
+        if (it->wait_for(std::chrono::milliseconds(0)) == std::future_status::ready) {
+            // Get the result and add it to allResults
+            auto search_results = it->get();
+            allResults.insert(allResults.end(), search_results.begin(), search_results.end());
+
+            // Remove the completed future from the list
+            it = futures.erase(it);
+        } else {
+            ++it; // Move to the next future
+        }
     }
+
+    // Optionally, sleep for a short duration to reduce CPU usage
+    std::this_thread::sleep_for(std::chrono::milliseconds(10));
+}
 
     // Output matching results
     for (const auto& result : allResults) {

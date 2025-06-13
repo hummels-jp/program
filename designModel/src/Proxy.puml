@@ -1,0 +1,23 @@
+@startuml
+title Proxy Design Pattern
+
+interface Subject {
+    + request() : void
+}
+
+class RealSubject {
+    + request() : void
+}
+
+class Proxy {
+    + request() : void
+    - realSubject : RealSubject
+    - accessLevel : string
+    - checkAccess() : bool
+}
+
+Subject <|.. RealSubject
+Subject <|.. Proxy
+Proxy o-- RealSubject
+
+@enduml

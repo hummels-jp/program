@@ -1,0 +1,27 @@
+@startuml
+title Template Method Design Pattern
+
+abstract class AbstractClass {
+    + templateMethod() : void
+    + baseOperation1() : void
+    + baseOperation2() : void
+    + hook() : void
+    # requiredOperation1() : void
+    # requiredOperation2() : void
+}
+
+class ConcreteClassA {
+    + requiredOperation1() : void
+    + requiredOperation2() : void
+}
+
+class ConcreteClassB {
+    + requiredOperation1() : void
+    + requiredOperation2() : void
+    + hook() : void
+}
+
+AbstractClass <|-- ConcreteClassA
+AbstractClass <|-- ConcreteClassB
+
+@enduml

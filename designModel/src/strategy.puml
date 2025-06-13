@@ -1,0 +1,32 @@
+@startuml
+title Strategy Design Pattern
+
+interface TaxStrategy {
+    + calculateTax(amount: double) : double
+}
+
+class UKTaxStrategy {
+    + calculateTax(amount: double) : double
+}
+
+class USTaxStrategy {
+    + calculateTax(amount: double) : double
+}
+
+class JapanTaxStrategy {
+    + calculateTax(amount: double) : double
+}
+
+TaxStrategy <|.. UKTaxStrategy
+TaxStrategy <|.. USTaxStrategy
+TaxStrategy <|.. JapanTaxStrategy
+
+class SalesOrder {
+    - taxStrategy : TaxStrategy
+    + setTaxStrategy(strategy: TaxStrategy) : void
+    + calculateTotal(amount: double) : double
+}
+
+SalesOrder o-- TaxStrategy
+
+@enduml

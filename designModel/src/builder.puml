@@ -1,0 +1,77 @@
+@startuml
+title Builder Design Pattern
+
+class House {
+    + foundation : string
+    + structure : string
+    + roof : string
+    + interior : string
+    + exterior : string
+    + showDetails() : void
+}
+
+class WoodenHouse {
+    + showDetails() : void
+}
+
+class BrickHouse {
+    + showDetails() : void
+}
+
+class GlassHouse {
+    + showDetails() : void
+}
+
+House <|-- WoodenHouse
+House <|-- BrickHouse
+House <|-- GlassHouse
+
+abstract class HouseBuilder {
+    + createNewHouse() : void
+    + buildFoundation() : void
+    + buildStructure() : void
+    + buildRoof() : void
+    + buildInterior() : void
+    + buildExterior() : void
+    + getHouse() : House
+}
+
+class WoodenHouseBuilder {
+    + createNewHouse() : void
+    + buildFoundation() : void
+    + buildStructure() : void
+    + buildRoof() : void
+    + buildInterior() : void
+    + buildExterior() : void
+}
+
+class BrickHouseBuilder {
+    + createNewHouse() : void
+    + buildFoundation() : void
+    + buildStructure() : void
+    + buildRoof() : void
+    + buildInterior() : void
+    + buildExterior() : void
+}
+
+class GlassHouseBuilder {
+    + createNewHouse() : void
+    + buildFoundation() : void
+    + buildStructure() : void
+    + buildRoof() : void
+    + buildInterior() : void
+    + buildExterior() : void
+}
+
+HouseBuilder <|-- WoodenHouseBuilder
+HouseBuilder <|-- BrickHouseBuilder
+HouseBuilder <|-- GlassHouseBuilder
+
+class Director {
+    + setBuilder(builder : HouseBuilder) : void
+    + constructHouse() : House
+}
+
+Director ..> HouseBuilder
+
+@enduml
