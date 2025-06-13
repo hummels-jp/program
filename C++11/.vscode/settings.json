@@ -59,5 +59,6 @@
         "xtree": "cpp",
         "xutility": "cpp",
         "unordered_set": "cpp"
-    }
+    },
+    "git.ignoreLimitWarning": true
 }
