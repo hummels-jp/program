@@ -81,7 +81,8 @@
         "regex": "cpp",
         "shared_mutex": "cpp",
         "stop_token": "cpp",
-        "thread": "cpp"
+        "thread": "cpp",
+        "csignal": "cpp"
     },
     "cmake.sourceDirectory": "D:/mygit_code/program/CMake/CMake001"
 }
