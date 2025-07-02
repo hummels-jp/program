@@ -82,7 +82,20 @@
         "shared_mutex": "cpp",
         "stop_token": "cpp",
         "thread": "cpp",
-        "csignal": "cpp"
+        "csignal": "cpp",
+        "cstdarg": "cpp",
+        "cwctype": "cpp",
+        "strstream": "cpp",
+        "bitset": "cpp",
+        "codecvt": "cpp",
+        "complex": "cpp",
+        "memory_resource": "cpp",
+        "numeric": "cpp",
+        "string_view": "cpp",
+        "cfenv": "cpp",
+        "cinttypes": "cpp",
+        "typeindex": "cpp",
+        "variant": "cpp"
     },
     "cmake.sourceDirectory": "D:/mygit_code/program/CMake/CMake001"
 }
