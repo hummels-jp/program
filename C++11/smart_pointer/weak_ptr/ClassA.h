@@ -9,16 +9,18 @@ Date: 7/4/2025
 #define CLASSA_H
 
 #include<memory>
-#include "ClassB.h"
+
 using namespace std;
+class ClassB;
 
 class ClassA {
 public:
     ClassA();
     ~ClassA();
 
-private:
-    shared_ptr<ClassB> ptr_b;
+public:
+    // shared_ptr<ClassB> ptr_b;
+    weak_ptr<ClassB> ptr_b;
 };
 
 #endif // CLASSA_H
