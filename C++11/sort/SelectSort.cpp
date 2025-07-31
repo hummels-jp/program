@@ -4,8 +4,10 @@ using namespace std;
 
 void select_sort(vector<int>& arr) {
     int size = arr.size();
-    for (int  i = 0; i < size -1; i++)
+
+    for (int i = 0; i < size - 1; i++)
     {
+        /* code */
         int min_idx = i;
         for (int  j = i+1; j < size; j++)
         {
@@ -17,13 +19,13 @@ void select_sort(vector<int>& arr) {
             }
         }
 
-        if (min_idx !=i)
+        if (min_idx != i)
         {
             /* code */
-            swap(arr[min_idx], arr[i]);
+            swap(arr[i], arr[min_idx]);
         }
-         
     }
+    
     
 }
 
