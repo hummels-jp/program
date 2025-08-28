@@ -10,11 +10,37 @@ struct Point {
 typedef std::vector<Point> Polygon;
 
 // 计算叉积
+/*
+cross函数用于计算向量OA和OB的叉积（二维情况下）：
+- O为起点，A和B为终点。
+- (A.x - O.x, A.y - O.y) 表示向量OA
+- (B.x - O.x, B.y - O.y) 表示向量OB
+- 叉积公式：(A.x - O.x) * (B.y - O.y) - (A.y - O.y) * (B.x - O.x)
+
+几何意义：
+- 结果为正：OB在OA的逆时针方向（左侧）
+- 结果为负：OB在OA的顺时针方向（右侧）
+- 结果为零：三点共线
+*/
 double cross(const Point& O, const Point& A, const Point& B) {
     return (A.x - O.x) * (B.y - O.y) - (A.y - O.y) * (B.x - O.x);
 }
 
 // 判断点是否在多边形内（射线法，适用于凸/非凸）
+/*
+is_point_in_polygon函数实现如下：
+
+1. 遍历多边形的每一条边(a, b)。
+2. 判断点pt的水平射线是否与当前边相交：
+   - ((a.y <= pt.y && pt.y < b.y) || (b.y <= pt.y && pt.y < a.y))
+     判断pt.y是否在a.y和b.y之间（不包含上端点，包含下端点），即射线可能与边相交。
+   - pt.x < (b.x - a.x) * (pt.y - a.y) / (b.y - a.y + 1e-12) + a.x
+     计算多边形边(a, b)与y=pt.y的交点横坐标，如果pt.x小于交点x坐标，说明射线穿过该边。
+3. 每遇到一次穿过，cnt加1。
+4. 最后判断cnt是否为奇数（cnt%2==1），奇数则点在多边形内，偶数则在外。
+
+该算法适用于任意简单多边形（凸或非凸），并能处理浮点精度问题。
+*/
 bool is_point_in_polygon(const Point& pt, const Polygon& poly) {
     int n = poly.size();
     int cnt = 0;
@@ -51,6 +77,21 @@ bool segments_intersect(const Point& p1, const Point& p2, const Point& q1, const
 }
 
 // 判断多边形是否相交
+/*
+polygons_intersect函数用于判断两个多边形poly1和poly2是否相交，具体步骤如下：
+
+1. 边相交检测：
+   - 遍历poly1的每一条边(a1, a2)。
+   - 对于poly2的每一条边(b1, b2)，判断(a1, a2)和(b1, b2)是否相交（调用segments_intersect）。
+   - 只要有一对边相交，立即返回true，表示多边形相交。
+
+2. 包含关系检测：
+   - 如果没有边相交，判断poly1的第一个点是否在poly2内部（调用is_point_in_polygon）。
+   - 如果poly1的第一个点在poly2内部，返回true。
+   - 同理，判断poly2的第一个点是否在poly1内部，如果在，也返回true。
+
+3. 如果上述都不满足，说明两个多边形既没有边相交，也没有包含关系，返回false，表示不相交。
+*/
 bool polygons_intersect(const Polygon& poly1, const Polygon& poly2) {
     // 边相交
     for(int i=0; i<poly1.size(); i++) {
