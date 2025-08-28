@@ -1,0 +1,1 @@
+Hello, unique_ptr with custom deletor!
