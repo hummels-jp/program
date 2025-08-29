@@ -36,7 +36,7 @@ void PolygonFilter::read_from_json(std::string fileName)
     }
 
     // 输出每个Polygon的属性值
-    for (const auto& poly : polygons_) {
+    for (auto& poly : polygons_) {
         std::cout << "Polygon ID: " << poly.get_polygon_id()
                   << ", Area: " << poly.get_area()
                   << ", Max Ratio: " << poly.get_max_ratio()
@@ -57,7 +57,7 @@ void PolygonFilter::loop_polygons()
     }
 
     // 输出每个Polygon的属性值
-    for (const auto& poly : polygons_) {
+    for (auto& poly : polygons_) {
         std::cout << "Polygon ID: " << poly.get_polygon_id()
                   << ", Area: " << poly.get_area()
                   << ", Max Ratio: " << poly.get_max_ratio()
