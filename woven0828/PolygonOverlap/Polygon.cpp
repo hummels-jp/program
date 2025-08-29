@@ -8,35 +8,14 @@ date: 8/29/2025
 #include "Polygon.h"
 
 Polygon::Polygon()
-    : area_(-1.0)
-    , max_ratio_(0.0)
+    : max_ratio_(0.0)
 {
-
 }
 
 Polygon::Polygon(std::vector<Point> points)
-    : points_(points) 
-    , area_(-1.0)
+    : points_(points)
     , max_ratio_(0.0)
 {
-    // Constructor
-    area_ = get_area();
-
-}
-
-double Polygon::get_area()
-{
-    if (area_ < 0 && points_.size() >= 3) {
-        double area = 0.0;
-        int n = points_.size();
-        for (int i = 0; i < n; ++i) {
-            const Point& p1 = points_[i];
-            const Point& p2 = points_[(i + 1) % n];
-            area += (p1.getX() * p2.getY()) - (p2.getX() * p1.getY());
-        }
-        area_ = std::abs(area) * 0.5;
-    }
-    return area_;
 }
 
 bool Polygon::segments_intersect(const Point& p1, const Point& p2, const Point& q1, const Point& q2)
@@ -82,13 +61,13 @@ bool Polygon::polygon_overlap(Polygon& polygon)
 {
     // 1. 计算重叠区域（Sutherland–Hodgman 多边形裁剪算法）
     std::vector<Point> intersection = points_;
-    int n = polygon.points_.size();
+    int n = polygon.get_points().size();
     for (int i = 0; i < n; ++i) {
         std::vector<Point> input = intersection;
         intersection.clear();
         if (input.empty()) break;
-        const Point& A = polygon.points_[i];
-        const Point& B = polygon.points_[(i + 1) % n];
+        const Point& A = polygon.get_points()[i];
+        const Point& B = polygon.get_points()[(i + 1) % n];
         for (size_t j = 0; j < input.size(); ++j) {
             const Point& P = input[j];
             const Point& Q = input[(j + 1) % input.size()];
@@ -135,17 +114,19 @@ bool Polygon::polygon_overlap(Polygon& polygon)
     }
 
     // 3. 计算比例并更新 max_ratio_
-    double ratio = (area_ > 0) ? (overlap_area / area_) : 0.0;
+    double area1 = this->get_area();
+    double area2 = polygon.get_area();
+    double ratio = (area1 > 0) ? (overlap_area / area1) : 0.0;
     if (ratio > max_ratio_) max_ratio_ = ratio;
 
-    double other_area = polygon.area_;
-    double other_ratio = (other_area > 0) ? (overlap_area / other_area) : 0.0;
-    if (other_ratio > polygon.max_ratio_) polygon.max_ratio_ = other_ratio;
+    double other_ratio = (area2 > 0) ? (overlap_area / area2) : 0.0;
+    if (other_ratio > polygon.max_ratio_) polygon.set_max_ratio(other_ratio);
 
     // 4. 返回是否有重叠
     return overlap_area > 0.0;
 }
 
-Polygon::~Polygon() {
+Polygon::~Polygon()
+{
     // Destructor
 }

@@ -138,6 +138,14 @@ LRESULT CALLBACK WndProc(HWND hWnd, UINT message, WPARAM wParam, LPARAM lParam)
             case IDM_EXIT:
                 DestroyWindow(hWnd);
                 break;
+            case ID_EXIT_LINE:
+                // 这里添加对“Exit->Line”菜单的响应
+                MessageBox(hWnd, L"Exit->Line 菜单被点击", L"提示", MB_OK);
+                break;
+            case ID_DRAW_LINE:
+                // 这里添加对“Draw->Line”菜单的响应
+                MessageBox(hWnd, L"Draw->Line 菜单被点击", L"提示", MB_OK);
+                break;
             default:
                 return DefWindowProc(hWnd, message, wParam, lParam);
             }

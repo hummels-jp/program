@@ -3,6 +3,18 @@
   "WorkspaceRootPath": "D:\\work_directory\\git_work\\program_coding\\program\\woven0828\\Polygon\\",
   "Documents": [
     {
+      "AbsoluteMoniker": "D:0:0:{CB19CCB0-C798-488B-A52A-6A3878A64668}|Polygon\\Polygon.vcxproj|D:\\work_directory\\git_work\\program_coding\\program\\woven0828\\Polygon\\Polygon\\Polygon.rc||{177559E0-D141-11D0-92DF-00A0C9138C45}|,   b e g i n       $ \u008D $(  \u0022     ",
+      "RelativeMoniker": "D:0:0:{CB19CCB0-C798-488B-A52A-6A3878A64668}|Polygon\\Polygon.vcxproj|solutionrelative:Polygon\\Polygon.rc||{177559E0-D141-11D0-92DF-00A0C9138C45}|,   b e g i n       $ \u008D $(  \u0022     "
+    },
+    {
+      "AbsoluteMoniker": "D:0:0:{CB19CCB0-C798-488B-A52A-6A3878A64668}|Polygon\\Polygon.vcxproj|D:\\work_directory\\git_work\\program_coding\\program\\woven0828\\Polygon\\Polygon\\Polygon.rc||{177559E0-D141-11D0-92DF-00A0C9138C45}|,   b e g i n       % \u0087 $(  \u0022     ",
+      "RelativeMoniker": "D:0:0:{CB19CCB0-C798-488B-A52A-6A3878A64668}|Polygon\\Polygon.vcxproj|solutionrelative:Polygon\\Polygon.rc||{177559E0-D141-11D0-92DF-00A0C9138C45}|,   b e g i n       % \u0087 $(  \u0022     "
+    },
+    {
+      "AbsoluteMoniker": "D:0:0:{CB19CCB0-C798-488B-A52A-6A3878A64668}|Polygon\\Polygon.vcxproj|D:\\work_directory\\git_work\\program_coding\\program\\woven0828\\Polygon\\Polygon\\Polygon.ico||{177559E0-D141-11D0-92DF-00A0C9138C45}",
+      "RelativeMoniker": "D:0:0:{CB19CCB0-C798-488B-A52A-6A3878A64668}|Polygon\\Polygon.vcxproj|solutionrelative:Polygon\\Polygon.ico||{177559E0-D141-11D0-92DF-00A0C9138C45}"
+    },
+    {
       "AbsoluteMoniker": "D:0:0:{CB19CCB0-C798-488B-A52A-6A3878A64668}|Polygon\\Polygon.vcxproj|D:\\work_directory\\git_work\\program_coding\\program\\woven0828\\Polygon\\Polygon\\Polygon.cpp||{D0E1A5C6-B359-4E41-9B60-3365922C2A22}",
       "RelativeMoniker": "D:0:0:{CB19CCB0-C798-488B-A52A-6A3878A64668}|Polygon\\Polygon.vcxproj|solutionrelative:Polygon\\Polygon.cpp||{D0E1A5C6-B359-4E41-9B60-3365922C2A22}"
     }
@@ -14,19 +26,55 @@
       "DocumentGroups": [
         {
           "DockedWidth": 200,
-          "SelectedChildIndex": 0,
+          "SelectedChildIndex": 2,
           "Children": [
             {
               "$type": "Document",
+              "DocumentIndex": 2,
+              "Title": "Polygon.ico -  [\u4E2D\u6587(\u7B80\u4F53\uFF0C\u4E2D\u56FD)] - Icon [256x256, 32 \u4F4D, PNG]",
+              "DocumentMoniker": "D:\\work_directory\\git_work\\program_coding\\program\\woven0828\\Polygon\\Polygon\\Polygon.ico",
+              "RelativeDocumentMoniker": "Polygon\\Polygon.ico",
+              "ToolTip": "D:\\work_directory\\git_work\\program_coding\\program\\woven0828\\Polygon\\Polygon\\Polygon.ico -  [\u4E2D\u6587(\u7B80\u4F53\uFF0C\u4E2D\u56FD)] - Icon [256x256, 32 \u4F4D, PNG]",
+              "RelativeToolTip": "Polygon\\Polygon.ico -  [\u4E2D\u6587(\u7B80\u4F53\uFF0C\u4E2D\u56FD)] - Icon [256x256, 32 \u4F4D, PNG]",
+              "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.001525|",
+              "WhenOpened": "2025-08-29T06:38:10.616Z",
+              "EditorCaption": " -  [\u4E2D\u6587(\u7B80\u4F53\uFF0C\u4E2D\u56FD)] - Icon [256x256, 32 \u4F4D, PNG]"
+            },
+            {
+              "$type": "Document",
+              "DocumentIndex": 1,
+              "Title": "Polygon.rc - IDD_ABOUTBOX [\u4E2D\u6587(\u7B80\u4F53\uFF0C\u4E2D\u56FD)] - Dialog",
+              "DocumentMoniker": "D:\\work_directory\\git_work\\program_coding\\program\\woven0828\\Polygon\\Polygon\\Polygon.rc",
+              "RelativeDocumentMoniker": "Polygon\\Polygon.rc",
+              "ToolTip": "D:\\work_directory\\git_work\\program_coding\\program\\woven0828\\Polygon\\Polygon\\Polygon.rc - IDD_ABOUTBOX [\u4E2D\u6587(\u7B80\u4F53\uFF0C\u4E2D\u56FD)] - Dialog*",
+              "RelativeToolTip": "Polygon\\Polygon.rc - IDD_ABOUTBOX [\u4E2D\u6587(\u7B80\u4F53\uFF0C\u4E2D\u56FD)] - Dialog*",
+              "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.001005|",
+              "WhenOpened": "2025-08-29T06:29:20.111Z",
+              "EditorCaption": " - IDD_ABOUTBOX [\u4E2D\u6587(\u7B80\u4F53\uFF0C\u4E2D\u56FD)] - Dialog"
+            },
+            {
+              "$type": "Document",
               "DocumentIndex": 0,
+              "Title": "Polygon.rc - IDC_POLYGON [\u4E2D\u6587(\u7B80\u4F53\uFF0C\u4E2D\u56FD)] - Menu",
+              "DocumentMoniker": "D:\\work_directory\\git_work\\program_coding\\program\\woven0828\\Polygon\\Polygon\\Polygon.rc",
+              "RelativeDocumentMoniker": "Polygon\\Polygon.rc",
+              "ToolTip": "D:\\work_directory\\git_work\\program_coding\\program\\woven0828\\Polygon\\Polygon\\Polygon.rc - IDC_POLYGON [\u4E2D\u6587(\u7B80\u4F53\uFF0C\u4E2D\u56FD)] - Menu*",
+              "RelativeToolTip": "Polygon\\Polygon.rc - IDC_POLYGON [\u4E2D\u6587(\u7B80\u4F53\uFF0C\u4E2D\u56FD)] - Menu*",
+              "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.001005|",
+              "WhenOpened": "2025-08-29T06:25:27.098Z",
+              "EditorCaption": " - IDC_POLYGON [\u4E2D\u6587(\u7B80\u4F53\uFF0C\u4E2D\u56FD)] - Menu"
+            },
+            {
+              "$type": "Document",
+              "DocumentIndex": 3,
               "Title": "Polygon.cpp",
               "DocumentMoniker": "D:\\work_directory\\git_work\\program_coding\\program\\woven0828\\Polygon\\Polygon\\Polygon.cpp",
               "RelativeDocumentMoniker": "Polygon\\Polygon.cpp",
-              "ToolTip": "D:\\work_directory\\git_work\\program_coding\\program\\woven0828\\Polygon\\Polygon\\Polygon.cpp",
-              "RelativeToolTip": "Polygon\\Polygon.cpp",
-              "ViewState": "AQIAAAAAAAAAAAAAAAAAAAAAAAAAAAAA",
+              "ToolTip": "D:\\work_directory\\git_work\\program_coding\\program\\woven0828\\Polygon\\Polygon\\Polygon.cpp*",
+              "RelativeToolTip": "Polygon\\Polygon.cpp*",
+              "ViewState": "AgIAAHgAAAAAAAAAAAAAAIwAAAAMAAAAAAAAAA==",
               "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000677|",
-              "WhenOpened": "2025-08-28T08:26:24.63Z",
+              "WhenOpened": "2025-08-29T06:21:53.147Z",
               "EditorCaption": ""
             }
           ]

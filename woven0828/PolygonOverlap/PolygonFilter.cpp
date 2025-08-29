@@ -30,7 +30,7 @@ void PolygonFilter::read_from_json(std::string fileName)
             Point pt(apex["x"], apex["y"]);
             poly.get_points().push_back(pt);
         }
-        poly.set_area(poly.get_area());
+
         poly.set_max_ratio(0.0);
         polygons_.push_back(poly);
     }
@@ -41,9 +41,12 @@ void PolygonFilter::read_from_json(std::string fileName)
                   << ", Area: " << poly.get_area()
                   << ", Max Ratio: " << poly.get_max_ratio()
                   << std::endl;
+        // std::cout << "Apexes: ";
+        // for (const auto& pt : poly.get_points()) {
+        //     std::cout << "(" << pt.getX() << ", " << pt.getY() << ") ";
+        // }
+        // std::cout << std::endl;
     }
-
-    
 }
 
 void PolygonFilter::loop_polygons()
@@ -57,6 +60,7 @@ void PolygonFilter::loop_polygons()
     }
 
     // 输出每个Polygon的属性值
+    std::cout << "after loop " << std::endl;
     for (auto& poly : polygons_) {
         std::cout << "Polygon ID: " << poly.get_polygon_id()
                   << ", Area: " << poly.get_area()
@@ -69,13 +73,13 @@ void PolygonFilter::output_json(std::string file_name)
 {
     json j;
     j["convex hulls"] = json::array();
-    for (const auto& poly : polygons_) {
-        if (poly.get_max_ratio() <= 0.5) { // 只输出max_ratio_小于等于0.5的
+    for (auto& poly : polygons_) {
+        if (poly.get_max_ratio() >= 0.5) { // 只输出max_ratio_小于等于0.5的
             json hull;
             hull["ID"] = poly.get_polygon_id(); // 获取多边形ID
             hull["max_ratio"] = poly.get_max_ratio(); // 可选：输出max_ratio
             hull["apexes"] = json::array();
-            for (const auto& pt : poly.get_points()) {
+            for (auto& pt : poly.get_points()) {
                 hull["apexes"].push_back({ {"x", pt.getX()}, {"y", pt.getY()} });
             }
             j["convex hulls"].push_back(hull);
@@ -87,6 +91,8 @@ void PolygonFilter::output_json(std::string file_name)
     }
     fout << j.dump(4); // 美化输出
     fout.close();
+
+    std::cout << "output finished " << std::endl;
 }
 
 PolygonFilter::~PolygonFilter() {
