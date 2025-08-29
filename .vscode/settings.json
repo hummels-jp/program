@@ -84,7 +84,11 @@
         "thread": "cpp",
         "csignal": "cpp",
         "resumable": "cpp",
-        "semaphore": "cpp"
+        "semaphore": "cpp",
+        "any": "cpp",
+        "codecvt": "cpp",
+        "numeric": "cpp",
+        "valarray": "cpp"
     },
     "cmake.sourceDirectory": "D:/mygit_code/program/CMake/CMake001",
     "editor.inlineSuggest.enabled": false
