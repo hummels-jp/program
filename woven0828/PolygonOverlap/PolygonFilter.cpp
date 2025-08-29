@@ -36,17 +36,17 @@ void PolygonFilter::read_from_json(std::string fileName)
     }
 
     // 输出每个Polygon的属性值
-    for (auto& poly : polygons_) {
-        std::cout << "Polygon ID: " << poly.get_polygon_id()
-                  << ", Area: " << poly.get_area()
-                  << ", Max Ratio: " << poly.get_max_ratio()
-                  << std::endl;
-        // std::cout << "Apexes: ";
-        // for (const auto& pt : poly.get_points()) {
-        //     std::cout << "(" << pt.getX() << ", " << pt.getY() << ") ";
-        // }
-        // std::cout << std::endl;
-    }
+    // for (auto& poly : polygons_) {
+    //     std::cout << "Polygon ID: " << poly.get_polygon_id()
+    //               << ", Area: " << poly.get_area()
+    //               << ", Max Ratio: " << poly.get_max_ratio()
+    //               << std::endl;
+    //     // std::cout << "Apexes: ";
+    //     // for (const auto& pt : poly.get_points()) {
+    //     //     std::cout << "(" << pt.getX() << ", " << pt.getY() << ") ";
+    //     // }
+    //     // std::cout << std::endl;
+    // }
 }
 
 void PolygonFilter::loop_polygons()
@@ -60,13 +60,13 @@ void PolygonFilter::loop_polygons()
     }
 
     // 输出每个Polygon的属性值
-    std::cout << "after loop " << std::endl;
-    for (auto& poly : polygons_) {
-        std::cout << "Polygon ID: " << poly.get_polygon_id()
-                  << ", Area: " << poly.get_area()
-                  << ", Max Ratio: " << poly.get_max_ratio()
-                  << std::endl;
-    }
+    // std::cout << "after loop " << std::endl;
+    // for (auto& poly : polygons_) {
+    //     std::cout << "Polygon ID: " << poly.get_polygon_id()
+    //               << ", Area: " << poly.get_area()
+    //               << ", Max Ratio: " << poly.get_max_ratio()
+    //               << std::endl;
+    // }
 }
 
 void PolygonFilter::output_json(std::string file_name)
@@ -93,6 +93,20 @@ void PolygonFilter::output_json(std::string file_name)
     fout.close();
 
     std::cout << "output finished " << std::endl;
+}
+
+// 假设 polygons_ 是存储所有多边形的成员变量
+int PolygonFilter::get_polygon_count() const {
+    return static_cast<int>(polygons_.size());
+}
+
+// 处理当前Polygon 和 idx 之后的Polygon 的重叠区域计算
+void PolygonFilter::process_polygon(int idx) {
+    int n = polygons_.size();
+    for (int j = idx + 1; j < n; ++j) {
+        polygons_[idx].polygon_overlap(polygons_[j]);
+        // polygon_overlap 内部会自动更新 max_ratio_
+    }
 }
 
 PolygonFilter::~PolygonFilter() {

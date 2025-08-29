@@ -31,6 +31,8 @@ public:
 
     // filter and output the rest polygons.
     void output_json(std::string file_name);
+    int get_polygon_count() const;
+    void process_polygon(int idx);
 
 private:
     std::vector<Polygon> polygons_; // store the polygons;

@@ -88,7 +88,16 @@
         "any": "cpp",
         "codecvt": "cpp",
         "numeric": "cpp",
-        "valarray": "cpp"
+        "valarray": "cpp",
+        "bitset": "cpp",
+        "cstdarg": "cpp",
+        "cwctype": "cpp",
+        "memory_resource": "cpp",
+        "string_view": "cpp",
+        "numbers": "cpp",
+        "text_encoding": "cpp",
+        "cinttypes": "cpp",
+        "variant": "cpp"
     },
     "cmake.sourceDirectory": "D:/mygit_code/program/CMake/CMake001",
     "editor.inlineSuggest.enabled": false
