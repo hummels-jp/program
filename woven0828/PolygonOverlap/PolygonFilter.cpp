@@ -22,7 +22,7 @@ void PolygonFilter::read_from_json(std::string fileName)
     polygons_.clear();
     for (const auto& hull : j["convex hulls"]) {
         Polygon poly;
-        // 读取ID
+        // Read ID
         if (hull.contains("ID")) {
             poly.set_polygon_id(hull["ID"]);
         }
@@ -35,7 +35,7 @@ void PolygonFilter::read_from_json(std::string fileName)
         polygons_.push_back(poly);
     }
 
-    // 输出每个Polygon的属性值
+    // Print each Polygon's attributes
     // for (auto& poly : polygons_) {
     //     std::cout << "Polygon ID: " << poly.get_polygon_id()
     //               << ", Area: " << poly.get_area()
@@ -55,11 +55,11 @@ void PolygonFilter::loop_polygons()
     for (int i = 0; i < n; ++i) {
         for (int j = i + 1; j < n; ++j) {
             polygons_[i].polygon_overlap(polygons_[j]);
-            // polygon_overlap 内部会自动更新 max_ratio_
+            // polygon_overlap will automatically update max_ratio_
         }
     }
 
-    // 输出每个Polygon的属性值
+    // Print each Polygon's attributes
     // std::cout << "after loop " << std::endl;
     // for (auto& poly : polygons_) {
     //     std::cout << "Polygon ID: " << poly.get_polygon_id()
@@ -74,10 +74,10 @@ void PolygonFilter::output_json(std::string file_name)
     json j;
     j["convex hulls"] = json::array();
     for (auto& poly : polygons_) {
-        if (poly.get_max_ratio() >= 0.5) { // 只输出max_ratio_小于等于0.5的
+        if (poly.get_max_ratio() >= 0.5) { // Only output polygons with max_ratio_ >= 0.5
             json hull;
-            hull["ID"] = poly.get_polygon_id(); // 获取多边形ID
-            hull["max_ratio"] = poly.get_max_ratio(); // 可选：输出max_ratio
+            hull["ID"] = poly.get_polygon_id(); // Polygon ID
+            hull["max_ratio"] = poly.get_max_ratio(); // Optional: output max_ratio
             hull["apexes"] = json::array();
             for (auto& pt : poly.get_points()) {
                 hull["apexes"].push_back({ {"x", pt.getX()}, {"y", pt.getY()} });
@@ -89,23 +89,23 @@ void PolygonFilter::output_json(std::string file_name)
     if (!fout) {
         throw std::runtime_error("Cannot open output.json for writing");
     }
-    fout << j.dump(4); // 美化输出
+    fout << j.dump(4); // Pretty print
     fout.close();
 
     std::cout << "output finished " << std::endl;
 }
 
-// 假设 polygons_ 是存储所有多边形的成员变量
+// polygons_ is the member variable storing all polygons
 int PolygonFilter::get_polygon_count() const {
     return static_cast<int>(polygons_.size());
 }
 
-// 处理当前Polygon 和 idx 之后的Polygon 的重叠区域计算
+// Process overlap calculation between current Polygon and those after idx
 void PolygonFilter::process_polygon(int idx) {
     int n = polygons_.size();
     for (int j = idx + 1; j < n; ++j) {
         polygons_[idx].polygon_overlap(polygons_[j]);
-        // polygon_overlap 内部会自动更新 max_ratio_
+        // polygon_overlap will automatically update max_ratio_
     }
 }
 
