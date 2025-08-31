@@ -66,3 +66,60 @@
 	![alt text](image.png)
 	  
 	  
+https://www.bilibili.com/video/BV1fw4m1r7cT?spm_id_from=333.788.videopod.episodes&vd_source=f806e1845ce32bd171eeadf5991dc371
+
+线程池：
+	1 管理线程
+	2 工作线程
+	3 线程池
+	4 任务队列
+	5 线程安全 
+		同步： 互斥锁， 原子变量
+		线程通信： 条件变量
+
+线程池类
+	成员：
+	1 管理线程 调节控制工作线程的数量
+	2 工作线程 
+		从任务队列中取任务，进行处理
+		如果任务队列为空，工作线程被条件变量阻塞
+		线程同步
+		工作任务数量
+		空闲工作任务数量
+		最大线程数量
+		最小线程数量
+	3 任务队列 
+		互斥锁
+		条件变量
+	4 线程池开关
+		bool 变量
+
+
+异步线程池类：
+成员：
+	thread* m_manager;
+	Map<>
+	vector<thread> m_workers;
+	atomic<int> m_minThread;
+	atomic<int> m_maxThread;
+	atomic<int> m_currentThread;
+	atomic<int> m_idleThread;
+	atmic<bool> m_isClosed;
+
+	queue<function<void()>> m_tasks;
+
+	mutex m_mutex;
+	conditional_variable m_cv; // 阻塞消费者线程，任务队列没有任务数限制
+
+
+方法：
+	ThreadPool()
+
+	addTask() 生产者进程
+
+	worker() 消费者进程
+
+
+
+
+
