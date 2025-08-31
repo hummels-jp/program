@@ -1,8 +1,8 @@
-# PolygonOverlap 使用说明
+# PolygonOverlap User Guide
 
-## 编译方法
+## Build Instructions
 
-推荐使用 CMake 构建：
+Recommended: use CMake
 
 ```sh
 mkdir build
@@ -11,50 +11,50 @@ cmake ..
 cmake --build .
 ```
 
-或者直接用 g++ 编译（需 C++11 及以上）：
+Or compile directly with g++ (requires C++11 or above):
 
 ```sh
-g++ -std=c++11 -pthread -o PolygonOverlap main.cpp PolygonFilter.cpp ... # 省略其它源文件
+g++ -std=c++11 -pthread -o PolygonOverlap main.cpp PolygonFilter.cpp ... # other source files omitted
 ```
 
-## 运行参数
+## Usage
 
-程序支持单线程和多线程两种模式，命令格式如下：
+The program supports both single-threaded and multi-threaded modes. Command format:
 
 ```
 ./PolygonOverlap <input_json> <output_json> <single|multi> [min_threads]
 ```
 
-- `<input_json>`：输入多边形数据的 JSON 文件路径
-- `<output_json>`：输出结果 JSON 文件路径
-- `<single|multi>`：处理模式，`single` 为单线程，`multi` 为多线程
-- `[min_threads]`：多线程模式下最小线程数（可选，默认2）
+- `<input_json>`: Path to the input JSON file containing polygon data
+- `<output_json>`: Path to the output JSON file
+- `<single|multi>`: Processing mode, `single` for single-threaded, `multi` for multi-threaded
+- `[min_threads]`: Minimum number of threads in multi-threaded mode (optional, default is 2)
 
-### 示例
+### Examples
 
-单线程：
+Single-threaded:
 ```
 ./PolygonOverlap ../input/convex_hulls_100.json ../output/output_100.json single
 ```
 
-多线程（最小线程数为4）：
+Multi-threaded (minimum 8 threads):
 ```
-./PolygonOverlap ../input/convex_hulls_1000.json ../output/output_1000.json multi 4
+./PolygonOverlap ../input/convex_hulls_10000.json ../output/output_10000.json multi 8
 ```
 
-## 输入输出格式
+## Input/Output Format
 
-- 输入文件为 JSON 格式，包含多边形顶点信息。
-- 输出文件为 JSON 格式，包含筛选后的多边形及其属性。
+- Input file: JSON format, contains polygon vertex information.
+- Output file: JSON format, contains filtered polygons and their properties.
 
-## 依赖
+## Dependencies
 
-- C++11 或更高
+- C++11 or higher
 - CMake 3.10+
-- nlohmann/json（或兼容 JSON 库）
+- nlohmann/json (or compatible JSON library)
 
-## 其他说明
+## Notes
 
-- 程序会自动创建输出目录（如不存在）。
-- 多线程模式下线程池会根据任务量动态调整线程数量。
-- 程序结束后会输出总耗时（单位：毫秒）。
+- The program will automatically create the output directory if it does not exist.
+- In multi-threaded mode, the thread pool dynamically adjusts the number of worker threads based on workload.
+- The program prints the total execution time (in milliseconds) after completion.

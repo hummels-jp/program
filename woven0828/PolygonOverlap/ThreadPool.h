@@ -48,7 +48,7 @@ private:
     std::atomic<bool> stop; // Stop flag
 };
 
-// construct function
+// Constructor: initialize thread pool with min_threads worker threads and start manager thread
 inline ThreadPool::ThreadPool(size_t min_threads, size_t max_threads)
     : stop(false),
       current_threads_(0),
@@ -56,17 +56,16 @@ inline ThreadPool::ThreadPool(size_t min_threads, size_t max_threads)
       min_threads_(static_cast<int>(min_threads)),
       max_threads_(static_cast<int>(max_threads))
 {
-    // Start with min_threads worker threads
     for (size_t i = 0; i < min_threads; ++i) {
         std::thread t(&ThreadPool::worker_thread, this);
         workers.emplace(t.get_id(), std::move(t));
         ++current_threads_;
     }
     std::cout << "[ThreadPool] Initial worker threads: " << min_threads << std::endl;
-    // Start manager thread
     manager_ = std::thread(&ThreadPool::manager_thread, this);
 }
 
+// Worker thread main loop: fetch and execute tasks, handle dynamic removal
 inline void ThreadPool::worker_thread() {
     while (true) {
         std::function<void()> task;
@@ -92,10 +91,10 @@ inline void ThreadPool::worker_thread() {
     --current_threads_;
 }
 
+// Manager thread: periodically check and adjust the number of worker threads
 inline void ThreadPool::manager_thread() {
-    // Periodically check and adjust the number of worker threads
     while (!stop) {
-        std::this_thread::sleep_for(std::chrono::milliseconds(100));
+        std::this_thread::sleep_for(std::chrono::microseconds(100));
         int task_count = 0;
         {
             std::lock_guard<std::mutex> lock(queue_mutex);
@@ -125,15 +124,32 @@ inline void ThreadPool::manager_thread() {
             if (remove > 0) {
                 std::cout << "[ThreadPool] Removing worker threads: " << remove
                           << " (from " << curr << " to " << (curr - remove) << ")" << std::endl;
+                std::cout.flush();
             }
             for (int i = 0; i < remove; ++i) {
                 // Notify idle threads to exit
-                enqueue([this] { stop = true; });
+                // Use ids mechanism to notify specific threads to exit
+                {
+                    std::lock_guard<std::mutex> lock(queue_mutex);
+                    int count = 0;
+                    for (int j = 0; j < remove; ++j) {
+                        if (!workers.empty()) {
+                            auto it = workers.begin();
+                            // Advance iterator by j % workers.size() to select different threads for removal
+                            std::advance(it, j % workers.size());
+                            ids.push_back(it->first);
+                            ++count;
+                        }
+                    }
+                }
+                condition.notify_all();
+                break; // Only process once, avoid multiple notifications
             }
         }
     }
 }
 
+// Shutdown the thread pool: stop all threads and join them
 inline void ThreadPool::shutdown() {
     stop = true;
     condition.notify_all();
@@ -150,6 +166,7 @@ inline ThreadPool::~ThreadPool() {
     shutdown();
 }
 
+// Enqueue a task into the thread pool and return a future
 template<class F, class... Args>
 auto ThreadPool::enqueue(F&& f, Args&&... args)
     -> std::future<typename std::result_of<F(Args...)>::type>
@@ -167,6 +184,9 @@ auto ThreadPool::enqueue(F&& f, Args&&... args)
     }
     condition.notify_one();
     return res;
+}
+
+#endif /* THREAD_POOL_H_ */
 }
 
 #endif /* THREAD_POOL_H_ */

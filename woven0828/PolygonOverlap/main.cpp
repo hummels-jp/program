@@ -23,6 +23,7 @@ int main(int argc, char* argv[]) {
     std::string mode = argv[3];
     int min_threads = 2;
     int max_threads = std::thread::hardware_concurrency();
+    std::cout << "CPU cores detected: " << max_threads << std::endl;
     if (mode == "multi" && argc >= 5) {
         min_threads = std::atoi(argv[4]);
         if (min_threads <= 0) min_threads = 2;
