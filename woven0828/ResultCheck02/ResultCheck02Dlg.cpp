@@ -72,6 +72,7 @@ BEGIN_MESSAGE_MAP(CResultCheck02Dlg, CDialogEx)
 	ON_BN_CLICKED(IDOK, &CResultCheck02Dlg::OnBnClickedOk)
 	ON_COMMAND(ID_DRAW_POLYGON, &CResultCheck02Dlg::OnDrawPolygon)
 	ON_COMMAND(ID_FILE_OPEN32773, &CResultCheck02Dlg::OnFileOpen32773)
+	ON_COMMAND(ID_JSONFILE_OPENOUTPUTJSON, &CResultCheck02Dlg::OnJsonfileOpenoutputjson)
 END_MESSAGE_MAP()
 
 
@@ -289,4 +290,28 @@ void CResultCheck02Dlg::OnFileOpen32773()
             AfxMessageBox(CString("Exception occurred: ") + ex.what());
         }
     }
+}
+
+void CResultCheck02Dlg::OnJsonfileOpenoutputjson()
+{
+	// TODO: 在此添加命令处理程序代码
+		// 打开文件选择对话框，只显示 .json 文件
+	CFileDialog dlg(TRUE, _T("json"), NULL, OFN_FILEMUSTEXIST | OFN_PATHMUSTEXIST,
+		_T("JSON 文件 (*.json)|*.json|所有文件 (*.*)|*.*||"));
+	if (dlg.DoModal() == IDOK)
+	{
+		CString cstrPath = dlg.GetPathName();
+		// CString 转 std::string
+		CT2A pszPath(cstrPath);
+		std::string input_json(pszPath);
+
+		try {
+			PolygonFilter filter;
+			m_polygons = filter.read_from_json(input_json); // 保存到成员变量
+			Invalidate(); // 触发重绘
+		}
+		catch (const std::exception& ex) {
+			AfxMessageBox(CString("Exception occurred: ") + ex.what());
+		}
+	}
 }

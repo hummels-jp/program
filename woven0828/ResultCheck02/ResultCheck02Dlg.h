@@ -40,4 +40,5 @@ public:
 	afx_msg void OnDrawPolygon();
 	afx_msg void OnFileOpen32773();
 	std::vector<Polygon2D> m_polygons;
+	afx_msg void OnJsonfileOpenoutputjson();
 };
