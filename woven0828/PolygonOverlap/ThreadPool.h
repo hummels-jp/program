@@ -187,6 +187,3 @@ auto ThreadPool::enqueue(F&& f, Args&&... args)
 }
 
 #endif /* THREAD_POOL_H_ */
-}
-
-#endif /* THREAD_POOL_H_ */
