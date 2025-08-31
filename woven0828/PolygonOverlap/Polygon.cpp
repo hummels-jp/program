@@ -8,13 +8,27 @@ date: 8/29/2025
 #include "Polygon.h"
 #include <cmath>
 
+/**
+ * @brief Default constructor for Polygon.
+ */
 Polygon::Polygon() : max_ratio_(0.0), polygon_id_(0) {}
 
+/**
+ * @brief Constructor for Polygon with a vector of points.
+ * @param points Vector of Point objects representing the polygon vertices.
+ */
 Polygon::Polygon(std::vector<Point> points)
     : points_(std::move(points)), max_ratio_(0.0), polygon_id_(0) {}
 
+/**
+ * @brief Destructor for Polygon.
+ */
 Polygon::~Polygon() {}
 
+/**
+ * @brief Calculates the area of the polygon.
+ * @return Area of the polygon.
+ */
 double Polygon::GetArea() const
 {
     if (points_.size() < 3) return 0.0;
@@ -28,6 +42,14 @@ double Polygon::GetArea() const
     return std::abs(area) * 0.5;
 }
 
+/**
+ * @brief Checks if two segments intersect.
+ * @param p1 First endpoint of the first segment.
+ * @param p2 Second endpoint of the first segment.
+ * @param q1 First endpoint of the second segment.
+ * @param q2 Second endpoint of the second segment.
+ * @return True if the segments intersect, false otherwise.
+ */
 bool Polygon::SegmentsIntersect(const Point& p1, const Point& p2, const Point& q1, const Point& q2)
 {
     auto cross = [](const Point& a, const Point& b, const Point& c) {
@@ -43,6 +65,11 @@ bool Polygon::SegmentsIntersect(const Point& p1, const Point& p2, const Point& q
     return false;
 }
 
+/**
+ * @brief Checks if a point is inside the polygon.
+ * @param point The point to check.
+ * @return True if the point is inside, false otherwise.
+ */
 bool Polygon::PointInsidePolygon(const Point& point)
 {
     int n = points_.size();
@@ -65,6 +92,11 @@ bool Polygon::PointInsidePolygon(const Point& point)
     return cnt % 2 == 1;
 }
 
+/**
+ * @brief Checks if two polygons overlap. If overlapped, updates max_ratio_.
+ * @param polygon The other polygon to check overlap with.
+ * @return True if the polygons overlap, false otherwise.
+ */
 bool Polygon::PolygonOverlap(Polygon& polygon)
 {
     std::vector<Point> intersection = points_;
@@ -127,26 +159,46 @@ bool Polygon::PolygonOverlap(Polygon& polygon)
     return overlap_area > 0.0;
 }
 
+/**
+ * @brief Get the vector of points of the polygon.
+ * @return Reference to the vector of points.
+ */
 std::vector<Point>& Polygon::Points()
 {
     return points_;
 }
 
+/**
+ * @brief Set the maximum area ratio for overlap.
+ * @param max_ratio The maximum ratio value.
+ */
 void Polygon::SetMaxRatio(double max_ratio)
 {
     max_ratio_ = max_ratio;
 }
 
+/**
+ * @brief Get the maximum area ratio for overlap.
+ * @return The maximum ratio value.
+ */
 double Polygon::MaxRatio() const
 {
     return max_ratio_;
 }
 
+/**
+ * @brief Set the polygon ID.
+ * @param polygon_id The polygon ID.
+ */
 void Polygon::SetPolygonId(int polygon_id)
 {
     polygon_id_ = polygon_id;
 }
 
+/**
+ * @brief Get the polygon ID.
+ * @return The polygon ID.
+ */
 int Polygon::PolygonId() const
 {
     return polygon_id_;
