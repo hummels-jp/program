@@ -1,3 +1,6 @@
+// This file follows the Google C++ Style Guide: https://google.github.io/styleguide/cppguide.html
+/* --- main.h --- */
+
 #include <iostream>
 #include <string>
 #include <chrono>
@@ -8,7 +11,7 @@
 #include "ThreadPool.h"
 
 int main(int argc, char* argv[]) {
-    // 参数说明:
+    // Argument description:
     // argv[1]: input_json
     // argv[2]: output_json
     // argv[3]: mode ("single" or "multi")

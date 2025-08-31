@@ -1,4 +1,4 @@
-// Google C++ Style Guide: https://google.github.io/styleguide/cppguide.html
+// This file follows the Google C++ Style Guide: https://google.github.io/styleguide/cppguide.html
 /* --- Polygon.h --- */
 
 /* ------------------------------------------

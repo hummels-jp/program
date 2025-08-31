@@ -15,37 +15,61 @@
 // ThreadPool class with dynamic thread management by a manager thread.
 // The pool starts with min_threads (default 2) and can grow up to max_threads (default: hardware concurrency).
 class ThreadPool {
-public:
-    explicit ThreadPool(size_t min_threads = 2, size_t max_threads = std::thread::hardware_concurrency());
-    ~ThreadPool();
+ public:
+  /**
+   * @brief Constructs a ThreadPool with a minimum and maximum number of threads.
+   * @param min_threads Minimum number of worker threads.
+   * @param max_threads Maximum number of worker threads.
+   */
+  explicit ThreadPool(size_t min_threads = 2, size_t max_threads = std::thread::hardware_concurrency());
 
-    // Submit a task to the thread pool, returns a future.
-    template<class F, class... Args>
-    auto enqueue(F&& f, Args&&... args)
-        -> std::future<typename std::result_of<F(Args...)>::type>;
+  /**
+   * @brief Destructor for ThreadPool. Shuts down the pool and joins all threads.
+   */
+  ~ThreadPool();
 
-    void shutdown();
+  /**
+   * @brief Submit a task to the thread pool.
+   * @tparam F Callable type.
+   * @tparam Args Argument types.
+   * @param f Callable object.
+   * @param args Arguments to pass to the callable.
+   * @return std::future holding the result of the task.
+   */
+  template <class F, class... Args>
+  auto enqueue(F&& f, Args&&... args)
+      -> std::future<typename std::result_of<F(Args...)>::type>;
 
-private:
-    // Worker thread function: fetches and executes tasks from the queue.
-    void worker_thread();
-    // Manager thread function: dynamically adjusts the number of worker threads.
-    void manager_thread();
+  /**
+   * @brief Shutdown the thread pool and join all threads.
+   */
+  void shutdown();
 
-    std::map<std::thread::id, std::thread> workers; // All worker threads
-    std::vector<std::thread::id> ids; // Thread IDs to be removed by the manager
-    std::thread manager_; // Manager thread
+ private:
+  /**
+   * @brief Worker thread function: fetches and executes tasks from the queue.
+   */
+  void worker_thread();
 
-    std::atomic<int> current_threads_; // Number of current threads
-    std::atomic<int> idle_threads_;    // Number of idle threads
-    std::atomic<int> min_threads_;     // Minimum number of threads
-    std::atomic<int> max_threads_;     // Maximum number of threads
+  /**
+   * @brief Manager thread function: dynamically adjusts the number of worker threads.
+   */
+  void manager_thread();
 
-    std::queue<std::function<void()>> tasks; // Task queue
+  std::map<std::thread::id, std::thread> workers;  // All worker threads
+  std::vector<std::thread::id> ids;                // Thread IDs to be removed by the manager
+  std::thread manager_;                            // Manager thread
 
-    std::mutex queue_mutex; // Mutex for task queue
-    std::condition_variable condition; // Condition variable for task notification
-    std::atomic<bool> stop; // Stop flag
+  std::atomic<int> current_threads_;  // Number of current threads
+  std::atomic<int> idle_threads_;     // Number of idle threads
+  std::atomic<int> min_threads_;      // Minimum number of threads
+  std::atomic<int> max_threads_;      // Maximum number of threads
+
+  std::queue<std::function<void()>> tasks;  // Task queue
+
+  std::mutex queue_mutex;             // Mutex for task queue
+  std::condition_variable condition;  // Condition variable for task notification
+  std::atomic<bool> stop;             // Stop flag
 };
 
 // Constructor: initialize thread pool with min_threads worker threads and start manager thread
