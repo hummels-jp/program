@@ -58,3 +58,9 @@ Multi-threaded (minimum 8 threads):
 - The program will automatically create the output directory if it does not exist.
 - In multi-threaded mode, the thread pool dynamically adjusts the number of worker threads based on workload.
 - The program prints the total execution time (in milliseconds) after completion.
+
+JSON File Visualization Tool
+..\ResultCheck02\x64\Release\ResultCheck02.exe
+1. To verify the correctness of the algorithm, an MFC-based JSON file visualization tool was developed.
+2. `OpenInputJson` can open and visualize the original input JSON file.
+3. `OpenOutputJson` can open and visualize the output JSON file after filtering.
