@@ -115,9 +115,11 @@ bool Polygon::PolygonOverlap(Polygon& polygon)
             };
             bool Pin = cross(A, B, P) >= 0;
             bool Qin = cross(A, B, Q) >= 0;
+            // If both P and Q are inside the current clipping edge (A,B), keep Q in the intersection polygon.
             if (Pin && Qin) {
                 intersection.push_back(Q);
             } else if (Pin && !Qin) {
+                // P is inside and Q is outside: add intersection point between edge and clip boundary.
                 double dx = Q.GetX() - P.GetX();
                 double dy = Q.GetY() - P.GetY();
                 double da = cross(A, B, P);
@@ -126,6 +128,7 @@ bool Polygon::PolygonOverlap(Polygon& polygon)
                 Point inter(P.GetX() + t * dx, P.GetY() + t * dy);
                 intersection.push_back(inter);
             } else if (!Pin && Qin) {
+                // P is outside and Q is inside: add intersection point and Q.
                 double dx = Q.GetX() - P.GetX();
                 double dy = Q.GetY() - P.GetY();
                 double da = cross(A, B, P);
@@ -138,13 +141,16 @@ bool Polygon::PolygonOverlap(Polygon& polygon)
         }
     }
 
+    // Calculate the area of the intersection polygon using the shoelace formula.
     double overlap_area = 0.0;
     if (intersection.size() >= 3) {
         for (size_t i = 0; i < intersection.size(); ++i) {
             const Point& p1 = intersection[i];
             const Point& p2 = intersection[(i + 1) % intersection.size()];
+            // Accumulate the cross product for each edge.
             overlap_area += (p1.GetX() * p2.GetY()) - (p2.GetX() * p1.GetY());
         }
+        // Take the absolute value and divide by 2 to get the polygon area.
         overlap_area = std::abs(overlap_area) * 0.5;
     }
 
