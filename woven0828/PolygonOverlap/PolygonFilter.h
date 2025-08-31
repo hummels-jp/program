@@ -19,24 +19,48 @@ Date: 8/29/2025
 using json = nlohmann::json;
 
 class PolygonFilter {
-public:
-    PolygonFilter();
-    ~PolygonFilter();
+ public:
+  /**
+   * @brief Default constructor for PolygonFilter.
+   */
+  PolygonFilter();
 
-    // read data from json, construct polygon set
-    void read_from_json(std::string file_name);
+  /**
+   * @brief Destructor for PolygonFilter.
+   */
+  ~PolygonFilter();
 
-    // loop the polygon set, update the polygon max_ratio_ value
-    void loop_polygons();
+  /**
+   * @brief Reads data from a JSON file and constructs the polygon set.
+   * @param file_name The path to the JSON file.
+   */
+  void ReadFromJson(const std::string& file_name);
 
-    // filter and output the rest polygons.
-    void output_json(std::string file_name);
-    int get_polygon_count() const;
-    void process_polygon(int idx);
+  /**
+   * @brief Loops through the polygon set and updates each polygon's max_ratio_ value.
+   */
+  void LoopPolygons();
 
-private:
-    std::vector<Polygon> polygons_; // store the polygons;
+  /**
+   * @brief Filters and outputs the remaining polygons to a JSON file.
+   * @param file_name The output JSON file path.
+   */
+  void OutputJson(const std::string& file_name);
 
+  /**
+   * @brief Gets the number of polygons in the set.
+   * @return The number of polygons.
+   */
+  int GetPolygonCount() const;
+
+  /**
+   * @brief Processes overlap calculation between the current polygon and all subsequent polygons.
+   * @param idx The index of the current polygon.
+   */
+  void ProcessPolygon(int idx);
+
+ private:
+  std::vector<Polygon> polygons_;  // Stores the polygons.
 };
 
-#endif // POLYGONFILTER_H
+#endif  // POLYGONFILTER_H

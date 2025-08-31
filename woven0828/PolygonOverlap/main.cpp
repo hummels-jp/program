@@ -32,7 +32,7 @@ int main(int argc, char* argv[]) {
     try {
         auto start = std::chrono::high_resolution_clock::now();
         PolygonFilter filter;
-        filter.read_from_json(input_json);
+        filter.ReadFromJson(input_json);
 
         // Ensure output directory exists
         {
@@ -50,16 +50,16 @@ int main(int argc, char* argv[]) {
             }
         }
 
-        int n = filter.get_polygon_count();
+        int n = filter.GetPolygonCount();
 
         if (mode == "single") {
-            filter.loop_polygons();
+            filter.LoopPolygons();
         } else if (mode == "multi") {
             ThreadPool pool(min_threads, max_threads);
             std::vector<std::future<void>> results;
             for (int i = 0; i < n; ++i) {
                 results.emplace_back(pool.enqueue([&filter, i] {
-                    filter.process_polygon(i);
+                    filter.ProcessPolygon(i);
                 }));
             }
             for (auto& fut : results) {
@@ -75,7 +75,7 @@ int main(int argc, char* argv[]) {
             return 1;
         }
 
-        filter.output_json(output_json);
+        filter.OutputJson(output_json);
         auto end = std::chrono::high_resolution_clock::now();
         std::cout << "Filtering and output completed. Results have been written to " << output_json << std::endl;
         std::cout << "Execution time: "

@@ -9,28 +9,34 @@ Date: 8/29/2025
 #define POINT_H
 
 class Point {
-public:
-    Point(double x =0, double y =0)
-        : x_(x)
-        , y_(y)
-    {
+ public:
+  /**
+   * @brief Constructor for Point.
+   * @param x X coordinate (default 0).
+   * @param y Y coordinate (default 0).
+   */
+  Point(double x = 0, double y = 0);
 
-    }
-    ~Point();
+  /**
+   * @brief Destructor for Point.
+   */
+  ~Point();
 
-    double getX() const
-    {
-        return x_;
-    }
+  /**
+   * @brief Get the X coordinate.
+   * @return X coordinate value.
+   */
+  double GetX() const;
 
-    double getY() const
-    {
-        return y_;
-    }
+  /**
+   * @brief Get the Y coordinate.
+   * @return Y coordinate value.
+   */
+  double GetY() const;
 
-private:
-    double x_;
-    double y_;
+ private:
+  double x_;
+  double y_;
 };
 
-#endif // POINT_H
+#endif  // POINT_H

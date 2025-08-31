@@ -1,3 +1,4 @@
+// Google C++ Style Guide: https://google.github.io/styleguide/cppguide.html
 /* --- Polygon.h --- */
 
 /* ------------------------------------------
@@ -9,71 +10,91 @@ Date: 8/29/2025
 #define POLYGON_H
 
 #include <vector>
-#include <math.h>
+#include <cmath>
 #include "Point.h"
+
 class Polygon {
-public:
-    Polygon();
+ public:
+  /**
+   * @brief Default constructor for Polygon.
+   */
+  Polygon();
 
-    Polygon(std::vector<Point> points);
-    ~Polygon();
+  /**
+   * @brief Constructor for Polygon with a vector of points.
+   * @param points Vector of Point objects representing the polygon vertices.
+   */
+  explicit Polygon(std::vector<Point> points);
 
-public:
-    // calculate the polygon area
-    double get_area() const
-    {
-        if (points_.size() < 3) return 0.0;
-        double area = 0.0;
-        int n = points_.size();
-        for (int i = 0; i < n; ++i) {
-            const Point& p1 = points_[i];
-            const Point& p2 = points_[(i + 1) % n];
-            area += (p1.getX() * p2.getY()) - (p2.getX() * p1.getY());
-        }
-        return std::abs(area) * 0.5;
-    }
+  /**
+   * @brief Destructor for Polygon.
+   */
+  ~Polygon();
 
-    // whether two sement are crossed
-    bool segments_intersect(const Point& p1, const Point& p2, const Point& q1, const Point& q2);
+  /**
+   * @brief Calculates the area of the polygon.
+   * @return Area of the polygon.
+   */
+  double GetArea() const;
 
-public:
-    // whether the point is inside the polygon
-    bool point_inside_polygon(const Point& point);
+  /**
+   * @brief Checks if two segments intersect.
+   * @param p1 First endpoint of the first segment.
+   * @param p2 Second endpoint of the first segment.
+   * @param q1 First endpoint of the second segment.
+   * @param q2 Second endpoint of the second segment.
+   * @return True if the segments intersect, false otherwise.
+   */
+  bool SegmentsIntersect(const Point& p1, const Point& p2, const Point& q1, const Point& q2);
 
-    // whether the two polygon is overlapped
-    // if overlapped, update the polygon max_ration member
-    bool polygon_overlap(Polygon& polygon);
+  /**
+   * @brief Checks if a point is inside the polygon.
+   * @param point The point to check.
+   * @return True if the point is inside, false otherwise.
+   */
+  bool PointInsidePolygon(const Point& point);
 
-    std::vector<Point>& get_points()
-    {
-        return points_;
-    }
+  /**
+   * @brief Checks if two polygons overlap. If overlapped, updates max_ratio_.
+   * @param polygon The other polygon to check overlap with.
+   * @return True if the polygons overlap, false otherwise.
+   */
+  bool PolygonOverlap(Polygon& polygon);
 
-    void set_max_ratio(double max_ratio)
-    {
-        max_ratio_ = max_ratio;
-    }
+  /**
+   * @brief Get the vector of points of the polygon.
+   * @return Reference to the vector of points.
+   */
+  std::vector<Point>& Points();
 
-    double get_max_ratio() const
-    {
-        return max_ratio_;
-    }
+  /**
+   * @brief Set the maximum area ratio for overlap.
+   * @param max_ratio The maximum ratio value.
+   */
+  void SetMaxRatio(double max_ratio);
 
-    void set_polygon_id(int polgyon_id)
-    {
-        polygon_id_ = polgyon_id;
-    }
+  /**
+   * @brief Get the maximum area ratio for overlap.
+   * @return The maximum ratio value.
+   */
+  double MaxRatio() const;
 
-    int get_polygon_id() const
-    {
-        return polygon_id_;
-    }
+  /**
+   * @brief Set the polygon ID.
+   * @param polygon_id The polygon ID.
+   */
+  void SetPolygonId(int polygon_id);
 
+  /**
+   * @brief Get the polygon ID.
+   * @return The polygon ID.
+   */
+  int PolygonId() const;
 
-private:
-    std::vector<Point> points_; // store the points of polygon
-    double max_ratio_; // if this polygon overlap with other polygons, store the max area ratio
-    int polygon_id_; // polygon id
+ private:
+  std::vector<Point> points_;  // Stores the points of the polygon.
+  double max_ratio_;           // Stores the max area ratio if this polygon overlaps with others.
+  int polygon_id_;             // Polygon id.
 };
 
-#endif // POLYGON_H
+#endif  // POLYGON_H
