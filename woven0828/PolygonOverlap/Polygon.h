@@ -38,23 +38,6 @@ class Polygon {
   double GetArea() const;
 
   /**
-   * @brief Checks if two segments intersect.
-   * @param p1 First endpoint of the first segment.
-   * @param p2 Second endpoint of the first segment.
-   * @param q1 First endpoint of the second segment.
-   * @param q2 Second endpoint of the second segment.
-   * @return True if the segments intersect, false otherwise.
-   */
-  bool SegmentsIntersect(const Point& p1, const Point& p2, const Point& q1, const Point& q2);
-
-  /**
-   * @brief Checks if a point is inside the polygon.
-   * @param point The point to check.
-   * @return True if the point is inside, false otherwise.
-   */
-  bool PointInsidePolygon(const Point& point);
-
-  /**
    * @brief Checks if two polygons overlap. If overlapped, updates max_ratio_.
    * @param polygon The other polygon to check overlap with.
    * @return True if the polygons overlap, false otherwise.

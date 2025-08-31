@@ -43,56 +43,6 @@ double Polygon::GetArea() const
 }
 
 /**
- * @brief Checks if two segments intersect.
- * @param p1 First endpoint of the first segment.
- * @param p2 Second endpoint of the first segment.
- * @param q1 First endpoint of the second segment.
- * @param q2 Second endpoint of the second segment.
- * @return True if the segments intersect, false otherwise.
- */
-bool Polygon::SegmentsIntersect(const Point& p1, const Point& p2, const Point& q1, const Point& q2)
-{
-    auto cross = [](const Point& a, const Point& b, const Point& c) {
-        return (b.GetX() - a.GetX()) * (c.GetY() - a.GetY()) - (b.GetY() - a.GetY()) * (c.GetX() - a.GetX());
-    };
-
-    auto d1 = cross(q1, q2, p1);
-    auto d2 = cross(q1, q2, p2);
-    auto d3 = cross(p1, p2, q1);
-    auto d4 = cross(p1, p2, q2);
-    if (((d1 > 0 && d2 < 0) || (d1 < 0 && d2 > 0)) && ((d3 > 0 && d4 < 0) || (d3 < 0 && d4 > 0)))
-        return true;
-    return false;
-}
-
-/**
- * @brief Checks if a point is inside the polygon.
- * @param point The point to check.
- * @return True if the point is inside, false otherwise.
- */
-bool Polygon::PointInsidePolygon(const Point& point)
-{
-    int n = points_.size();
-    int cnt = 0;
-    double x = point.GetX(), y = point.GetY();
-    for (int i = 0; i < n; ++i) {
-        const Point& a = points_[i];
-        const Point& b = points_[(i + 1) % n];
-        double x1 = a.GetX(), y1 = a.GetY();
-        double x2 = b.GetX(), y2 = b.GetY();
-
-        if ((y1 > y) != (y2 > y)) {
-            if (y2 - y1 != 0) {
-                double intersectX = x1 + (y - y1) * (x2 - x1) / (y2 - y1);
-                if (intersectX > x)
-                    cnt++;
-            }
-        }
-    }
-    return cnt % 2 == 1;
-}
-
-/**
  * @brief Checks if two polygons overlap. If overlapped, updates max_ratio_.
  * @param polygon The other polygon to check overlap with.
  * @return True if the polygons overlap, false otherwise.
