@@ -11,42 +11,17 @@ cmake ..
 cmake --build .
 ```
 
-Or compile directly with g++ (requires C++11 or above):
-
-```sh
-g++ -std=c++11 -pthread -o PolygonOverlap main.cpp PolygonFilter.cpp ... # other source files omitted
-```
-
 ## Build with MinGW (g++) on Windows
 
 If you have installed MinGW-w64 and want to use g++ instead of Visual Studio:
 
-1. Open PowerShell and go to the build directory:
-   ```powershell
-   mkdir build
-   cd build
-   ```
-2. Run CMake and specify the MinGW generator:
+1. Run CMake and specify the MinGW generator:
    ```powershell
    cmake -G "MinGW Makefiles" ..
    mingw32-make
    ```
-   Or (if g++ is in your PATH, you can use make directly):
-   ```powershell
-   cmake -G "MinGW Makefiles" ..
-   make
-   ```
-
-> Note: If you do not add -G "MinGW Makefiles", CMake will use Visual Studio as the default generator.
->
-> If you need to specify the path to g++.exe, you can set it at the top of CMakeLists.txt:
-> ```cmake
-> set(CMAKE_C_COMPILER "gcc" CACHE STRING "" FORCE)
-> set(CMAKE_CXX_COMPILER "g++" CACHE STRING "" FORCE)
-> ```
 
 ## Usage
-
 The program supports both single-threaded and multi-threaded modes. Command format:
 
 ```
@@ -67,7 +42,7 @@ Single-threaded:
 
 Multi-threaded (minimum 8 threads):
 ```
-./PolygonOverlap ../input/convex_hulls_1000.json ../output/output_1000.json multi 8
+./PolygonOverlap ../input/convex_hulls_1000.json ../output_multi_thread/output_1000.json multi 8
 ```
 
 ## Input/Output Format
@@ -81,11 +56,6 @@ Multi-threaded (minimum 8 threads):
 - CMake 3.10+
 - nlohmann/json (or compatible JSON library)
 
-## Notes
-
-- The program will automatically create the output directory if it does not exist.
-- In multi-threaded mode, the thread pool dynamically adjusts the number of worker threads based on workload.
-- The program prints the total execution time (in milliseconds) after completion.
 
 JSON File Visualization Tool
 ..\ResultCheck02\x64\Release\ResultCheck02.exe
