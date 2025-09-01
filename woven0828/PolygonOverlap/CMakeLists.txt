@@ -1,3 +1,6 @@
+# 默认使用 g++ 编译器（如有需要可修改为实际路径）
+set(CMAKE_C_COMPILER "gcc" CACHE STRING "" FORCE)
+set(CMAKE_CXX_COMPILER "g++" CACHE STRING "" FORCE)
 cmake_minimum_required(VERSION 3.10)
 project(PolygonOverlap)
 
