@@ -96,6 +96,13 @@ inline void ThreadPool::worker_thread() {
         {
             std::unique_lock<std::mutex> lock(this->queue_mutex);
             ++idle_threads_;
+            // Check if the current thread is in ids; if so, exit (remove idle thread)
+            auto it = std::find(ids.begin(), ids.end(), std::this_thread::get_id());
+            if (it != ids.end()) {
+                ids.erase(it);
+                --idle_threads_;
+                return;
+            }
             // Wait until there is a task in the queue or the thread pool is stopped
             this->condition.wait(lock, [this] {
                 return this->stop || !this->tasks.empty();
