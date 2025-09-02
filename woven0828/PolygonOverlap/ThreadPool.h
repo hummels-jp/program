@@ -11,6 +11,7 @@
 #include <atomic>
 #include <map>
 #include <chrono>
+#include <iostream>
 
 // ThreadPool class with dynamic thread management by a manager thread.
 // The pool starts with min_threads (default 2) and can grow up to max_threads (default: hardware concurrency).
@@ -99,8 +100,11 @@ inline void ThreadPool::worker_thread() {
             // Check if the current thread is in ids; if so, exit (remove idle thread)
             auto it = std::find(ids.begin(), ids.end(), std::this_thread::get_id());
             if (it != ids.end()) {
+                std::thread::id tid = std::this_thread::get_id();
                 ids.erase(it);
                 --idle_threads_;
+                // This thread will exit (return), so it will not continue looping.
+                // The main thread (shutdown) will join and erase it from workers.
                 return;
             }
             // Wait until there is a task in the queue or the thread pool is stopped
