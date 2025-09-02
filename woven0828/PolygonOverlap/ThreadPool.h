@@ -101,7 +101,7 @@ inline void ThreadPool::worker_thread() {
             if (it != ids.end()) {
                 ids.erase(it);
                 --idle_threads_;
-                break;
+                return;
             }
             // Wait until there is a task in the queue or the thread pool is stopped
             this->condition.wait(lock, [this] {
